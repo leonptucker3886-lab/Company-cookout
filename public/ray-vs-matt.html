@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Games - Company Cookout Casino</title>
+  <style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg-deep:#0c0400;--bg-mid:#1a0800;
+    --orange:#FF6B1A;--sun:#FFD700;--gold:#FFA500;--fire:#FF3300;
+    --wood-dark:#1C0F05;--wood-mid:#3A200A;--wood-light:#5C3318;
+    --copper:#B87333;--copper-l:#D4894E;
+    --cream:#FFF8DC;--green:#39FF14;--red:#FF4444;
+  }
+  body{background:var(--bg-deep);font-family:'Oswald',sans-serif;color:var(--cream);min-height:100vh}
+
+  .page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:28px}
+
+  .games-title{text-align:center;margin-bottom:2rem}
+  .games-title h1{font-size:3rem;color:var(--sun);margin-bottom:1rem}
+  .games-title p{font-size:1.1rem;color:var(--copper)}
+
+  .games-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;width:100%;max-width:1200px;margin:0 auto}
+
+  .game-card{background:linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all .3s;display:block;text-decoration:none;color:inherit}
+  .game-card:hover{background:linear-gradient(135deg,rgba(255,215,0,.1),rgba(255,215,0,.05));transform:translateY(-5px)}
+
+  .game-icon{font-size:3rem;margin-bottom:8px}
+  .game-title{font-family:'Inter',sans-serif;color:var(--cream);font-size:1rem;font-weight:600;margin-bottom:4px}
+  .game-desc{font-size:.7rem;color:var(--copper)}
+  </style>
+</head>
+<body>
+
+<div style="position:absolute;top:20px;left:20px;z-index:10">
+  <button onclick="window.location.href='index.html'" style="background:var(--copper);color:var(--cream);border:none;border-radius:8px;padding:10px 20px;font-family:'Oswald',sans-serif;cursor:pointer">← Back to Casino</button>
+</div>
+
+<div class="page">
+  <div class="games-title">
+    <h1>🎰 All Games</h1>
+    <p>Choose your game and start winning!</p>
+  </div>
+
+  <div class="games-grid">
+    <a class="game-card" href="sun-n-fun-slots.html">
+      <div class="game-icon">🎰</div>
+      <div class="game-title">Sun N Fun Slots</div>
+      <div class="game-desc">Premium 3-Reel Progressive Slots</div>
+    </a>
+    <a class="game-card" href="hold-and-win.html">
+      <div class="game-icon">🍺</div>
+      <div class="game-title">Chasin' My Sista</div>
+      <div class="game-desc">Respin Mechanics</div>
+    </a>
+    <a class="game-card" href="cluster-crush.html">
+      <div class="game-icon">🌽</div>
+      <div class="game-title">Cluster Crush</div>
+      <div class="game-desc">Match-3 Cascade</div>
+    </a>
+    <a class="game-card" href="moonshine-megaways.html">
+      <div class="game-icon">🍶</div>
+      <div class="game-title">Moonshine Megaways</div>
+      <div class="game-desc">46,656 Ways</div>
+    </a>
+    <a class="game-card" href="fight-or-run.html">
+      <div class="game-icon">⚔️</div>
+      <div class="game-title">Fight or Run</div>
+      <div class="game-desc">Battle Arena</div>
+    </a>
+    <a class="game-card" href="pick-em.html">
+      <div class="game-icon">🖐️</div>
+      <div class="game-title">Trailer Park Pick'em</div>
+      <div class="game-desc">Pick 3 Cards</div>
+    </a>
+    <a class="game-card" href="absconding.html">
+      <div class="game-icon">🏃‍♂️</div>
+      <div class="game-title">Absconding</div>
+      <div class="game-desc">Jailbreak Escape</div>
+    </a>
+    <a class="game-card" href="show-me-your-pitties.html">
+      <div class="game-icon">🐕</div>
+      <div class="game-title">Show Me Your Pitties</div>
+      <div class="game-desc">Pitbull Showcase</div>
+    </a>
+    <a class="game-card" href="destinated-drunk.html">
+      <div class="game-icon">🍺</div>
+      <div class="game-title">Destinated Drunk</div>
+      <div class="game-desc">Crash Into Trees</div>
+    </a>
+    <a class="game-card" href="white-jack.html">
+      <div class="game-icon">🃏</div>
+      <div class="game-title">White Jack</div>
+      <div class="game-desc">Trailer Blackjack</div>
+    </a>
+    <a class="game-card" href="shannon-cannon.html">
+      <div class="game-icon">💥</div>
+      <div class="game-title">Shannon Cannon</div>
+      <div class="game-desc">Shoot FedEx Trucks</div>
+    </a>
+    <a class="game-card" href="whod-the-snitch.html">
+      <div class="game-icon">👤</div>
+      <div class="game-title">Who'd the Snitch</div>
+      <div class="game-desc">Find the Rat</div>
+    </a>
+    <a class="game-card" href="graduated-3rd-grade-twice.html">
+      <div class="game-icon">🎓</div>
+      <div class="game-title">Graduated 3rd Grade Twice</div>
+      <div class="game-desc">Basic Quiz Game</div>
+    </a>
+  </div>
+</div>
+
+</body>
+</html></content>
+<parameter name="filePath">public/games.html
