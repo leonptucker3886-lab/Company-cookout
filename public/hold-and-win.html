@@ -97,7 +97,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 
   <div id="curr-bar">
     <div class="curr-item">
-      <div class="curr-lbl">💰 Hillbilly Bucks</div>
+      <div class="curr-lbl">💰 Beer Money</div>
       <div class="curr-val" id="bm">50.00</div>
     </div>
     <div>
@@ -188,7 +188,7 @@ function safePayout(amount){
   const maxPay = G.reserves + 20; // Keep $20 minimum
   if(amount > maxPay){
     amount = maxPay;
-    toast('💰 Payout capped by hillbilly reserves!', 3000);
+    toast('💰 Payout capped by house reserves!', 3000);
   }
   G.reserves = Math.max(0, G.reserves - amount);
   return amount;
@@ -249,15 +249,15 @@ function toggleHold(i){
 function spin(){
   if(G.spinning) return;
   if(G.beerMoney < G.bet){
-    toast('Not enough Hillbilly Bucks! 💰'); return;
+    toast('Not enough Beer Money! 🍺'); return;
   }
   G.spinning = true;
   el('spin-btn').disabled = true;
 
   // Random hillbilly taunt
-  if(Math.random() < 0.3){
-    const taunts = ["Imma get ya!", "Yer mine now!", "Chasin' ya down!", "Don't run, sista!"];
-    toast(taunts[Math.floor(Math.random() * taunts.length)] + " 🏃‍♂️");
+  if(Math.random() < 0.4){
+    const taunts = ["Imma get ya!", "Yer mine now!", "Chasin' ya down!", "Don't run, sista!", "Kick that piggo!", "Yeehaw!", "Git along little doggy!"];
+    toast(taunts[Math.floor(Math.random() * taunts.length)] + " 🐷");
   }
   
   G.beerMoney -= G.bet;
