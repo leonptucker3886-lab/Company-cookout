@@ -40,14 +40,10 @@ body{background:var(--bg-deep);font-family:'Oswald',sans-serif;color:var(--cream
 .pig-decor.l{left:2%}.pig-decor.r{right:2%;animation-delay:-3s}
 @keyframes sway{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
 
-/* ── PAGES ── */
-.page{position:relative;z-index:10;min-height:100vh;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;padding:30px 20px;gap:28px}
-.page{display:none}
-.page.active{display:flex}
 
-/* ── PAGE 1: LANDING ── */
-#p-land .logo-wrap{text-align:center}
+
+/* ── LANDING ── */
+.logo-wrap{text-align:center}
 .ccg-logo{position:relative;display:inline-block}
 .logo-badge{width:clamp(160px,40vw,220px);height:clamp(160px,40vw,220px);
   border-radius:50%;background:radial-gradient(circle at 40% 38%,#5C3318 0%,#2d1000 55%,#0d0400 100%);
@@ -85,10 +81,7 @@ body{background:var(--bg-deep);font-family:'Oswald',sans-serif;color:var(--cream
 
 /* ── PAGE 2: ABOUT ── */
 #p-about{gap:22px}
-.back-btn{position:absolute;top:22px;left:22px;background:none;border:2px solid rgba(184,115,51,.4);
-  border-radius:8px;color:rgba(184,115,51,.65);font-family:'Oswald',sans-serif;font-size:.72rem;
-  letter-spacing:2px;cursor:pointer;padding:5px 14px;transition:all .2s;text-transform:uppercase}
-.back-btn:hover{border-color:var(--copper);color:var(--copper)}
+
 
 .about-card{background:linear-gradient(180deg,rgba(58,32,10,.97),rgba(28,15,5,.97));
   border:3px solid var(--copper);border-radius:22px;padding:clamp(22px,5vw,38px) clamp(20px,5vw,42px);
@@ -245,8 +238,8 @@ body{background:var(--bg-deep);font-family:'Oswald',sans-serif;color:var(--cream
 <div class="pig-decor l">🐷</div>
 <div class="pig-decor r">🐷</div>
 
-<!-- PAGE 1: LANDING -->
-<div class="page active" id="p-land">
+<!-- LANDING -->
+<div id="landing">
   <div class="logo-wrap">
     <div class="ccg-logo">
       <div class="logo-badge">
@@ -270,8 +263,70 @@ body{background:var(--bg-deep);font-family:'Oswald',sans-serif;color:var(--cream
   <div class="tagline">Trailer Park Gaming · Pig Pit Edition</div>
 </div>
 
-<!-- GAMES PAGE -->
-<div class="page" id="p-about">
+<!-- GAMES SECTION -->
+<div id="games-section" style="display:none;padding:2rem 0;text-align:center">
+  <div style="font-size:4rem;margin-bottom:1rem">🎰</div>
+  <div style="font-family:'Inter',sans-serif;font-size:2rem;font-weight:700;color:var(--cream);margin-bottom:0.5rem">All Games</div>
+  <div style="font-size:1.1rem;color:var(--accent);margin-bottom:2rem">Choose your game and start winning!</div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;width:100%;max-width:1200px;margin:0 auto">
+    <div style="background:linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all .3s" onclick="window.location.href='sun-n-fun-slots.html'">
+      <div style="font-size:3rem;margin-bottom:8px">🎰</div>
+      <div style="font-family:'Inter',sans-serif;color:var(--cream);font-size:1rem;font-weight:600;margin-bottom:4px">Sun N Fun Slots</div>
+      <div style="font-size:.7rem;color:var(--copper)">Premium 3-Reel Progressive Slots</div>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all .3s" onclick="window.location.href='hold-and-win.html'">
+      <div style="font-size:3rem;margin-bottom:8px">🍺</div>
+      <div style="font-family:'Inter',sans-serif;color:var(--cream);font-size:1rem;font-weight:600;margin-bottom:4px">Hold & Win</div>
+      <div style="font-size:.7rem;color:var(--copper)">Respin Mechanics</div>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all .3s" onclick="window.location.href='cluster-crush.html'">
+      <div style="font-size:3rem;margin-bottom:8px">🌽</div>
+      <div style="font-family:'Inter',sans-serif;color:var(--cream);font-size:1rem;font-weight:600;margin-bottom:4px">Cluster Crush</div>
+      <div style="font-size:.7rem;color:var(--copper)">Match-3 Cascade</div>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all .3s" onclick="window.location.href='moonshine-megaways.html'">
+      <div style="font-size:3rem;margin-bottom:8px">🍶</div>
+      <div style="font-family:'Inter',sans-serif;color:var(--cream);font-size:1rem;font-weight:600;margin-bottom:4px">Moonshine Megaways</div>
+      <div style="font-size:.7rem;color:var(--copper)">46,656 Ways</div>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all .3s" onclick="window.location.href='fight-or-run.html'">
+      <div style="font-size:3rem;margin-bottom:8px">⚔️</div>
+      <div style="font-family:'Inter',sans-serif;color:var(--cream);font-size:1rem;font-weight:600;margin-bottom:4px">Fight or Run</div>
+      <div style="font-size:.7rem;color:var(--copper)">Battle Arena</div>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all .3s" onclick="window.location.href='pick-em.html'">
+      <div style="font-size:3rem;margin-bottom:8px">🖐️</div>
+      <div style="font-family:'Inter',sans-serif;color:var(--cream);font-size:1rem;font-weight:600;margin-bottom:4px">Trailer Park Pick'em</div>
+      <div style="font-size:.7rem;color:var(--copper)">Pick 3 Cards</div>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all .3s" onclick="window.location.href='absconding.html'">
+      <div style="font-size:3rem;margin-bottom:8px">🏃‍♂️</div>
+      <div style="font-family:'Inter',sans-serif;color:var(--cream);font-size:1rem;font-weight:600;margin-bottom:4px">Absconding</div>
+      <div style="font-size:.6rem;color:var(--copper)">Jailbreak Escape</div>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all .3s" onclick="window.location.href='show-me-your-pitties.html'">
+      <div style="font-size:3rem;margin-bottom:8px">🐕</div>
+      <div style="font-family:'Inter',sans-serif;color:var(--cream);font-size:1rem;font-weight:600;margin-bottom:4px">Show Me Your Pitties</div>
+      <div style="font-size:.6rem;color:var(--copper)">Pitbull Showcase</div>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all .3s" onclick="window.location.href='destinated-drunk.html'">
+      <div style="font-size:3rem;margin-bottom:8px">🍺</div>
+      <div style="font-family:'Inter',sans-serif;color:var(--cream);font-size:1rem;font-weight:600;margin-bottom:4px">Destinated Drunk</div>
+      <div style="font-size:.6rem;color:var(--copper)">Crash Into Trees</div>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all .3s" onclick="window.location.href='white-jack.html'">
+      <div style="font-size:3rem;margin-bottom:8px">🃏</div>
+      <div style="font-family:'Inter',sans-serif;color:var(--cream);font-size:1rem;font-weight:600;margin-bottom:4px">White Jack</div>
+      <div style="font-size:.6rem;color:var(--copper)">Trailer Blackjack</div>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all .3s" onclick="window.location.href='shannon-cannon.html'">
+      <div style="font-size:3rem;margin-bottom:8px">💥</div>
+      <div style="font-family:'Inter',sans-serif;color:var(--cream);font-size:1rem;font-weight:600;margin-bottom:4px">Shannon Cannon</div>
+      <div style="font-size:.6rem;color:var(--copper)">Shoot FedEx Trucks</div>
+    </div>
+  </div>
+</div>
   <button class="back-btn" onclick="goBack()">← Back</button>
 
   <div style="text-align:center;padding:2rem 0">
@@ -343,24 +398,11 @@ body{background:var(--bg-deep);font-family:'Oswald',sans-serif;color:var(--cream
 
 
 function enterSite(){
-  document.getElementById('p-land').classList.remove('active');
-  document.getElementById('p-about').classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
+  document.getElementById('games-section').style.display = 'block';
+  document.getElementById('games-section').scrollIntoView({behavior:'smooth'});
 }
 
-function goBack(){
-  document.getElementById('p-about').classList.remove('active');
-  document.getElementById('p-land').classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
-}
 
-document.addEventListener('keydown',e=>{
-  if(e.code==='Enter'||e.code==='Space'){
-    if(document.getElementById('p-land').classList.contains('active')){
-      e.preventDefault(); enterSite();
-    }
-  }
-});
 </script>
 </body>
 </html>
