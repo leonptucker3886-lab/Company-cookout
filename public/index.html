@@ -69,6 +69,21 @@ html,body{min-height:100%;background:var(--bg-gradient);font-family:'Inter','SF 
 .logo-glow{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(255,150,0,.06) 0%,transparent 70%);animation:badge-pulse 2.5s ease-in-out infinite}
 @keyframes badge-pulse{0%,100%{opacity:.5}50%{opacity:1}}
 
+.pool-scene{position:relative;width:100%;height:200px;margin:1rem auto 0;z-index:5;pointer-events:none}
+.kiddie-pool{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:150px;height:150px;border-radius:50%;background:linear-gradient(135deg,#4A90E2,#5BA0F2);border:4px solid #2E5B8C;box-shadow:inset 0 0 20px rgba(0,0,0,.3)}
+.pool-water{position:absolute;inset:4px;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(135,206,235,.8),rgba(70,130,180,.6));animation:water-ripple 3s ease-in-out infinite}
+@keyframes water-ripple{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.person{position:absolute;font-size:2rem;animation:person-sit 4s ease-in-out infinite}
+.person1{left:30%;top:20%;animation-delay:0s}
+.person2{right:25%;top:30%;animation-delay:1.5s}
+.person3{left:20%;bottom:10%;animation-delay:3s}
+.feet{position:absolute;font-size:1.5rem;animation:feet-dip 2s ease-in-out infinite}
+.feet1{left:35%;top:60%;animation-delay:0s}
+.feet2{right:30%;top:65%;animation-delay:0.5s}
+.feet3{left:25%;bottom:40%;animation-delay:1s}
+@keyframes feet-dip{0%,100%{transform:translateY(0) rotate(0deg)}25%{transform:translateY(10px) rotate(5deg)}50%{transform:translateY(20px) rotate(-5deg)}75%{transform:translateY(10px) rotate(5deg)}}
+@keyframes person-sit{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
 .presents{font-size:clamp(.8rem,3vw,1.2rem);color:var(--copper);letter-spacing:3px;text-transform:uppercase;text-align:center;margin-bottom:1rem;font-weight:500}
 .sun-fence{position:relative;width:clamp(250px,60vw,350px);height:clamp(150px,35vw,200px);margin:0 auto;cursor:pointer;border-radius:15px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.5),inset 0 2px 0 rgba(255,255,255,.1);transition:transform .3s ease;border:4px solid #654321}
 .sun-fence:hover{transform:translateY(-6px)}
@@ -247,7 +262,32 @@ html,body{min-height:100%;background:var(--bg-gradient);font-family:'Inter','SF 
         <div class="logo-txt-inner">
           Company Cookout
           <span>Gaming</span>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <div class="pool-scene">
+    <div class="kiddie-pool">
+      <div class="pool-water"></div>
+    </div>
+    <div class="person person1">👤</div>
+    <div class="person person2">👩</div>
+    <div class="person person3">👨</div>
+    <div class="feet feet1">🦶</div>
+    <div class="feet feet2">🦶</div>
+    <div class="feet feet3">🦶</div>
+  </div>
+
+  <div>
+    <div class="presents">Company Cookout presents</div>
+    <div class="sun-fence" onclick="window.location.href='games.html'">
+      <div class="fence-bg"></div>
+      <div class="fence-title">Sun N Fun</div>
+    </div>
+  </div>
+  <div class="tagline">Premium Gaming Experience · Mobile Optimized</div>
+</div>
 
 
 
