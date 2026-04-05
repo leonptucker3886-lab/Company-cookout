@@ -329,39 +329,12 @@ input[type=number]{-moz-appearance:textfield}
 <div class="pig-L">🐷</div>
 <div class="pig-R">🐷</div>
 
-<!-- LOGIN -->
-<div id="login-screen">
-  <div class="login-box">
-    <div class="login-title">🐷 Kick that Pig</div>
-    <div class="login-sub">Sun N Fun Slots · Members Only</div>
-    <input type="text" class="lf" id="lu" placeholder="Username" autocomplete="off">
-    <input type="password" class="lf" id="lp" placeholder="PIN">
-    <button class="login-btn" onclick="doLogin()">🍺 Let's Party! 🎰</button>
-    <div class="login-err" id="lerr">Invalid username or PIN. Try again!</div>
-    <div class="login-options">
-      <button class="guest-btn" onclick="doGuestLogin()">👤 Play as Guest</button>
-      <button class="signup-btn" onclick="showSignup()">📝 Sign Up</button>
-    </div>
-    <div style="font-size:.7rem;color:rgba(184,115,51,.6);text-align:center;margin-top:12px;letter-spacing:1px">
-      Sign Up feature not yet implemented please login as guest. Super beta mode mfers
-    </div>
-  </div>
-</div>
 
-<!-- SIGNUP MODAL -->
-<div id="signup-modal" class="mo">
-  <div class="mb" style="max-width:340px">
-    <div class="m-title">📝 Create Account</div>
-    <button class="m-close" onclick="closeSignup()">✕</button>
-    <input type="text" class="af" id="su" placeholder="Choose Username" autocomplete="off">
-    <input type="password" class="af" id="sp" placeholder="Choose PIN (4+ characters)">
-    <button class="ab" onclick="doSignup()">Create Account</button>
-    <div id="signup-err" style="color:var(--red);font-size:.8rem;text-align:center;display:none"></div>
-  </div>
-</div>
+
+
 
 <!-- MAIN APP -->
-<div id="app" style="display:none">
+<div id="app">
 
   <div>
     <div class="game-title"><span class="sun-spin">🐷</span> Kick that Pig <span class="sun-spin r">🐷</span></div>
@@ -681,75 +654,20 @@ function checkHouseBalance(){
   }
 }
 
-// ── AUTH ──
-function doLogin(){
-  const un=el('lu').value.trim().toLowerCase();
-  const pin=el('lp').value.trim();
-  const user=G.users.find(u=>u.username.toLowerCase()===un&&u.pin===pin);
-  if(!user){ el('lerr').classList.add('show'); return; }
-  el('lerr').classList.remove('show');
-  G.cu=user;
-  el('login-screen').style.display='none';
-  el('app').style.display='';
-  el('admin-btn').style.display=(user.isAdmin||user.isMod)?'':'none';
-  buildPaytable();
-  refreshUI();
-  spawnEmbers();
-  setSpd('normal');
-  toast(`Welcome to the cookout, ${user.username}! 🔥🐷`);
-}
-function doLogout(){
-  G.cu=null; G.spinning=false;
-  el('login-screen').style.display='';
-  el('app').style.display='none';
-  el('lu').value=''; el('lp').value='';
-}
-function doGuestLogin(){
+// ── GUEST LOGIN ──
+function setupGuest(){
   const guest={
     id:'guest_'+Date.now(), username:'Guest', pin:'guest',
-    beerMoney:40, nails:200, isAdmin:false, isMod:false,
+    beerMoney:50, nails:250, isAdmin:false, isMod:false,
     freeSpins:0, streak:0, lastCollect:null, isGuest:true
   };
   G.users.push(guest);
-  save();
   G.cu=guest;
-  el('login-screen').style.display='none';
-  el('app').style.display='';
   el('admin-btn').style.display='none';
   buildPaytable();
   refreshUI();
   spawnEmbers();
   setSpd('normal');
-  toast(`👤 Welcome, Guest! You have 200 nails and 40 Beer Money 🍺`);
-}
-function showSignup(){
-  el('signup-modal').classList.add('open');
-  el('su').value=''; el('sp').value='';
-  el('signup-err').style.display='none';
-}
-function closeSignup(){
-  el('signup-modal').classList.remove('open');
-}
-function doSignup(){
-  const un=el('su').value.trim();
-  const pin=el('sp').value.trim();
-  if(!un||un.length<2){ showSignupErr('Username must be at least 2 characters'); return; }
-  if(!pin||pin.length<4){ showSignupErr('PIN must be at least 4 characters'); return; }
-  if(G.users.find(u=>u.username.toLowerCase()===un.toLowerCase())){ showSignupErr('Username already taken'); return; }
-  const newUser={
-    id:'u_'+Date.now(), username:un, pin:pin,
-    beerMoney:40, nails:200, isAdmin:false, isMod:false,
-    freeSpins:0, streak:0, lastCollect:null
-  };
-  G.users.push(newUser);
-  save();
-  closeSignup();
-  el('lu').value=un; el('lp').value=pin;
-  doLogin();
-  toast(`🎉 Account created! Welcome, ${un}!`);
-}
-function showSignupErr(msg){
-  const e=el('signup-err'); e.textContent=msg; e.style.display='block';
 }
 
 // ── UI ──
@@ -1260,10 +1178,11 @@ document.addEventListener('keydown',e=>{
     }
   }
 });
-el('lp').addEventListener('keydown',e=>{ if(e.key==='Enter') doLogin(); });
+
 
 // ── INIT ──
 load();
+setupGuest(); // Auto-setup guest player
 </script>
 </body>
 </html>
