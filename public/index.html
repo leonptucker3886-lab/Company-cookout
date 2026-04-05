@@ -84,6 +84,8 @@ html,body{min-height:100%;background:var(--bg-primary);font-family:'Inter',sans-
 .enter-btn{padding:18px 40px;background:var(--gradient);border:2px solid var(--text-accent);border-radius:var(--radius);color:var(--bg-primary);font-family:'Inter',sans-serif;font-size:clamp(1rem,3vw,1.3rem);font-weight:600;letter-spacing:1px;cursor:pointer;box-shadow:0 8px 25px rgba(99,102,241,0.3);transition:var(--transition)}
 .enter-btn:hover{transform:translateY(-3px);box-shadow:0 12px 35px rgba(99,102,241,0.5)}
 .enter-btn:active{transform:translateY(0);box-shadow:0 4px 15px rgba(99,102,241,0.3)}
+.enter-btn.secondary{background:var(--bg-secondary);border-color:var(--border);color:var(--text-primary);margin-top:1rem}
+.enter-btn.secondary:hover{background:var(--bg-accent)}
 .tagline{font-size:.8rem;color:var(--text-secondary);letter-spacing:1px;text-align:center;margin-top:2rem;font-weight:400}
 
 /* ── PAGE 2: ABOUT ── */
@@ -278,6 +280,7 @@ html,body{min-height:100%;background:var(--bg-primary);font-family:'Inter',sans-
   </div>
 
   <button class="enter-btn" onclick="enterSite()">🎰 ENTER CASINO 🎰</button>
+  <button class="enter-btn secondary" onclick="window.location.href='games.html'">🎮 View All Games</button>
   <div class="tagline">Premium Gaming Experience · Mobile Optimized</div>
 </div>
 
