@@ -8,15 +8,13 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --primary:#0d0d0d;--secondary:#1a1a1a;--accent:#6366f1;
-  --gold:#fbbf24;--cream:#f8fafc;--blue:#3b82f6;
-  --success:#10b981;--warning:#f59e0b;--danger:#ef4444;
-  --bg-gradient:linear-gradient(135deg,#0a0a0a,#0f0f0f,#0a0a0a);
-  --card-bg:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.03));
-  --border:rgba(255,255,255,.15);--shadow:0 12px 40px rgba(0,0,0,.4);
-  --glow:0 0 20px rgba(99,102,241,.3);
+  --bg-deep:#0c0400;--bg-mid:#1a0800;
+  --orange:#FF6B1A;--sun:#FFD700;--gold:#FFA500;--fire:#FF3300;
+  --wood-dark:#1C0F05;--wood-mid:#3A200A;--wood-light:#5C3318;
+  --copper:#B87333;--copper-l:#D4894E;
+  --cream:#FFF8DC;--green:#39FF14;--red:#FF4444;
 }
-html,body{min-height:100%;background:var(--bg-gradient);font-family:'Inter','SF Pro Display',sans-serif;color:var(--cream);overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding-top:60px}
+body{background:var(--bg-deep);font-family:'Oswald',sans-serif;color:var(--cream);min-height:100vh;overflow-x:hidden;padding-top:60px}
 
 /* ── ATMOSPHERE ── */
 #bg{position:fixed;inset:0;pointer-events:none;z-index:0;
@@ -43,34 +41,63 @@ html,body{min-height:100%;background:var(--bg-gradient);font-family:'Inter','SF 
 @keyframes sway{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
 
 /* ── NAVIGATION ── */
-.nav-bar{position:fixed;top:0;left:0;right:0;z-index:1000;background:linear-gradient(135deg,rgba(13,13,13,.95),rgba(26,26,26,.95));border-bottom:2px solid var(--accent);box-shadow:var(--shadow);backdrop-filter:blur(10px)}
-.nav-container{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;max-width:1200px;margin:0 auto}
-.nav-logo{font-family:'Inter',sans-serif;font-size:1.4rem;color:var(--cream);font-weight:700;text-shadow:0 0 10px rgba(99,102,241,.5);letter-spacing:-0.02em}
-.nav-links{display:flex;gap:25px}
-.nav-link{color:var(--cream);text-decoration:none;font-family:'Inter',sans-serif;font-size:.9rem;letter-spacing:0.5px;text-transform:uppercase;padding:8px 16px;border-radius:8px;transition:all .3s ease;border:1px solid transparent}
-.nav-link:hover{color:var(--accent);background:rgba(99,102,241,.1);border-color:var(--accent);transform:translateY(-1px);box-shadow:var(--glow)}
-.nav-link.active{color:var(--accent);background:linear-gradient(135deg,rgba(99,102,241,.2),rgba(99,102,241,.1));border-color:var(--accent);font-weight:600}
+.nav-bar{position:fixed;top:0;left:0;right:0;z-index:1000;background:linear-gradient(135deg,rgba(28,15,5,.95),rgba(58,32,10,.95));border-bottom:2px solid var(--copper);box-shadow:0 0 20px rgba(0,0,0,.5)}
+.nav-container{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;max-width:1200px;margin:0 auto}
+.nav-logo{font-family:'Rye',cursive;font-size:1.5rem;color:var(--sun);text-shadow:0 0 10px rgba(255,215,0,.5)}
+.nav-links{display:flex;gap:20px}
+.nav-link{color:var(--copper);text-decoration:none;font-family:'Oswald',sans-serif;font-size:.9rem;letter-spacing:1px;text-transform:uppercase;padding:5px 10px;border-radius:5px;transition:all .2s}
+.nav-link:hover{color:var(--sun);background:rgba(255,215,0,.1)}
+.nav-link.active{color:var(--sun);background:var(--copper);font-weight:700}
+
+.pool-scene{position:relative;width:100%;height:200px;margin:1rem auto 0;z-index:5;pointer-events:none}
+.kiddie-pool{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:150px;height:150px;border-radius:50%;background:linear-gradient(135deg,#4A90E2,#5BA0F2);border:4px solid #2E5B8C;box-shadow:inset 0 0 20px rgba(0,0,0,.3)}
+.pool-water{position:absolute;inset:4px;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(135,206,235,.8),rgba(70,130,180,.6));animation:water-ripple 3s ease-in-out infinite}
+@keyframes water-ripple{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.person{position:absolute;font-size:2rem;animation:person-sit 4s ease-in-out infinite}
+.person1{left:30%;top:20%;animation-delay:0s}
+.person2{right:25%;top:30%;animation-delay:1.5s}
+.person3{left:20%;bottom:10%;animation-delay:3s}
+.feet{position:absolute;font-size:1.5rem;animation:feet-dip 2s ease-in-out infinite}
+.feet1{left:35%;top:60%;animation-delay:0s}
+.feet2{right:30%;top:65%;animation-delay:0.5s}
+.feet3{left:25%;bottom:40%;animation-delay:1s}
+@keyframes feet-dip{0%,100%{transform:translateY(0) rotate(0deg)}25%{transform:translateY(10px) rotate(5deg)}50%{transform:translateY(20px) rotate(-5deg)}75%{transform:translateY(10px) rotate(5deg)}}
+@keyframes person-sit{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+.presents{font-size:clamp(.8rem,3vw,1.2rem);color:var(--copper);letter-spacing:3px;text-transform:uppercase;text-align:center;margin-bottom:1rem;font-weight:500}
+.sun-fence{position:relative;width:clamp(200px,50vw,300px);height:clamp(120px,30vw,180px);margin:0 auto;cursor:pointer;border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.4);transition:transform .3s ease;border:4px solid #654321}
+.sun-fence:hover{transform:translateY(-4px)}
+.fence-bg{position:absolute;inset:0;background:linear-gradient(135deg,#654321,#8B4513,#A0522D,#654321);background-image:radial-gradient(circle at 20% 20%,rgba(101,67,33,.4) 0%,transparent 50%),radial-gradient(circle at 80% 80%,rgba(139,69,19,.3) 0%,transparent 50%),repeating-linear-gradient(45deg,transparent,transparent 5px,rgba(0,0,0,.1) 5px,rgba(0,0,0,.1) 6px)}
+.fence-title{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Rye',cursive;font-size:clamp(2rem,8vw,3rem);color:var(--sun);text-shadow:0 0 20px rgba(255,215,0,.8),2px 2px 0 var(--fire),4px 4px 0 #600;letter-spacing:2px;text-align:center}
+.tagline{font-size:clamp(.7rem,2vw,.85rem);color:var(--copper);letter-spacing:1px;text-align:center;font-weight:500;opacity:.8}
 
 /* ── PAGE 1: LANDING ── */
-#p-land .logo-wrap{text-align:center;margin-bottom:3rem}
+#p-land .logo-wrap{text-align:center}
 .ccg-logo{position:relative;display:inline-block}
-.logo-badge{width:clamp(120px,25vw,160px);height:clamp(120px,25vw,160px);
-  border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--blue));
-  border:3px solid var(--accent);
-  box-shadow:0 0 0 2px rgba(99,102,241,.3),0 0 40px rgba(99,102,241,.4),0 0 80px rgba(99,102,241,.2),
-    inset 0 2px 0 rgba(255,255,255,.1);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+.logo-badge{width:clamp(160px,40vw,220px);height:clamp(160px,40vw,220px);
+  border-radius:50%;background:radial-gradient(circle at 40% 38%,#5C3318 0%,#2d1000 55%,#0d0400 100%);
+  border:5px solid var(--copper);
+  box-shadow:0 0 0 3px rgba(184,115,51,.25),0 0 50px rgba(255,107,26,.3),0 0 100px rgba(255,70,0,.15),
+    inset 0 2px 0 rgba(255,255,255,.06);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
   position:relative;overflow:hidden}
 .logo-badge::before{content:'';position:absolute;inset:0;border-radius:50%;
-  background:radial-gradient(circle at 50% 0%,rgba(99,102,241,.2) 0%,transparent 70%)}
-.logo-ring{position:absolute;inset:-2px;border-radius:50%;border:2px solid rgba(99,102,241,.5);animation:logo-spin 20s linear infinite}
+  background:radial-gradient(circle at 50% 0%,rgba(255,200,50,.08) 0%,transparent 60%)}
+.logo-ring{position:absolute;inset:-3px;border-radius:50%;border:2px dashed rgba(184,115,51,.35);animation:logo-spin 20s linear infinite}
 @keyframes logo-spin{to{transform:rotate(360deg)}}
-.logo-icons{font-size:clamp(1.5rem,4vw,2rem);line-height:1;letter-spacing:2px;animation:icon-bob 3s ease-in-out infinite}
-@keyframes icon-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
-.logo-txt-inner{font-family:'Inter',sans-serif;font-size:clamp(.7rem,2vw,.9rem);color:var(--cream);
-  text-shadow:0 0 10px rgba(99,102,241,.5);letter-spacing:1px;text-align:center;line-height:1.2;font-weight:600}
-.logo-glow{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.1) 0%,transparent 80%);animation:badge-pulse 2.5s ease-in-out infinite}
-@keyframes badge-pulse{0%,100%{opacity:.6}50%{opacity:1}}
+.logo-icons{font-size:clamp(2rem,6vw,2.8rem);line-height:1;letter-spacing:4px;animation:icon-bob 3s ease-in-out infinite}
+@keyframes icon-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.logo-txt-inner{font-family:'Rye',cursive;font-size:clamp(.75rem,2.5vw,1rem);color:var(--sun);
+  text-shadow:0 0 12px rgba(255,215,0,.5);letter-spacing:3px;text-align:center;line-height:1.3}
+.logo-txt-inner span{display:block;font-size:.65em;color:var(--copper-l);letter-spacing:4px}
+.logo-glow{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(255,150,0,.06) 0%,transparent 70%);animation:badge-pulse 2.5s ease-in-out infinite}
+@keyframes badge-pulse{0%,100%{opacity:.5}50%{opacity:1}}
+
+.pig-decor{position:fixed;bottom:14%;font-size:2.2rem;opacity:.18;animation:sway 6s ease-in-out infinite;z-index:2}
+.pig-decor.l{left:2%}.pig-decor.r{right:2%;animation-delay:-3s}
+@keyframes sway{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+
+.pool-scene{position:relative;width:100%;height:200px;margin:1rem auto 0;z-index:5;pointer-events:none}
 
 .pool-scene{position:relative;width:100%;height:200px;margin:1rem auto 0;z-index:5;pointer-events:none}
 .kiddie-pool{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:150px;height:150px;border-radius:50%;background:linear-gradient(135deg,#4A90E2,#5BA0F2);border:4px solid #2E5B8C;box-shadow:inset 0 0 20px rgba(0,0,0,.3)}
@@ -251,39 +278,37 @@ html,body{min-height:100%;background:var(--bg-gradient);font-family:'Inter','SF 
 <div id="embers"></div>
 <div class="flame-L"></div>
 <div class="flame-R"></div>
+<div class="pig-decor l">🐷</div>
+<div class="pig-decor r">🐷</div>
 
 <!-- NAVIGATION -->
 <div class="nav-bar">
   <div class="nav-container">
-    <div class="nav-logo">Premium Casino</div>
+    <div class="nav-logo">🐷 Sun N Fun</div>
     <div class="nav-links">
       <a href="index.html" class="nav-link active">Home</a>
       <a href="games.html" class="nav-link">Games</a>
-  </div>
-</div>
-
-
-<div id="toast"></div>
-
-<!-- PAGE 1: LANDING -->
-<div class="page active" id="p-land">
-  <div class="logo-wrap">
-    <div class="ccg-logo">
-      <div class="logo-badge">
-        <div class="logo-ring"></div>
-        <div class="logo-glow"></div>
-        <div class="logo-icons">🎰</div>
-        <div class="logo-txt-inner">
-          Premium Casino
-        </div>
-      </div>
     </div>
   </div>
 
-  <div class="logo-section">
-    <div class="main-logo">Premium Casino</div>
-    <div class="subtitle">Experience the thrill of online gaming</div>
-    <button class="cta-btn" onclick="window.location.href='games.html'">Enter Casino</button>
+  <div class="pool-scene">
+    <div class="kiddie-pool">
+      <div class="pool-water"></div>
+    </div>
+    <div class="person person1">👤</div>
+    <div class="person person2">👩</div>
+    <div class="person person3">👨</div>
+    <div class="feet feet1">🦶</div>
+    <div class="feet feet2">🦶</div>
+    <div class="feet feet3">🦶</div>
+  </div>
+
+  <div>
+    <div class="presents">Company Cookout presents</div>
+    <div class="sun-fence" onclick="window.location.href='games.html'">
+      <div class="fence-bg"></div>
+      <div class="fence-title">Sun N Fun</div>
+    </div>
   </div>
   <div class="tagline">Premium Gaming Experience · Mobile Optimized</div>
 </div>
