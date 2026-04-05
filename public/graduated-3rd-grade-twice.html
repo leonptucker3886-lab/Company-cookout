@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>👤 Who'd the Snitch</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rye&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#0c0400;--wood:#1C0F05;--wood-l:#3A200A;--copper:#B87333;
+    --sun:#FFD700;--cream:#FFF8DC;--fire:#FF3300;--green:#39FF14;--red:#FF4444;
+  }
+  body{background:var(--bg);font-family:'Oswald',sans-serif;color:var(--cream);min-height:100vh;overflow-x:hidden}
+  #bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 50% 95%,rgba(101,67,33,.35) 0%,transparent 50%),linear-gradient(180deg,#2a1a0a,#3a2510,#4a3215,#5a3f1a)}
+  #embers{position:fixed;inset:0;z-index:1;overflow:hidden;pointer-events:none}
+  .ember{position:absolute;bottom:3%;border-radius:50%;animation:rise linear infinite}
+  @keyframes rise{0%{opacity:1;transform:translateY(0) translateX(0)}70%{opacity:.5}100%{opacity:0;transform:translateY(-60vh) translateX(var(--dx))}}
+  .flame{position:fixed;bottom:0;width:60px;height:120px;pointer-events:none;z-index:2;opacity:.4}
+  .flame.l{left:0}.flame.r{right:0}
+  .flame::before{content:'';position:absolute;bottom:0;left:15px;width:30px;height:80px;background:radial-gradient(ellipse,rgba(255,140,0,.5),transparent);border-radius:50% 50% 30% 30%;animation:flicker .8s ease-in-out infinite alternate}
+  @keyframes flicker{from{transform:scaleY(1)}to{transform:scaleY(.85)}}
+
+  #app{max-width:480px;margin:0 auto;padding:15px;position:relative;z-index:10;display:flex;flex-direction:column;gap:12px}
+  .title{font-family:'Rye',cursive;font-size:2.2rem;color:var(--sun);text-align:center;text-shadow:0 0 20px rgba(255,215,0,.5),2px 2px 0 var(--fire)}
+  .sub{font-size:.65rem;color:var(--copper);text-align:center;letter-spacing:3px;text-transform:uppercase}
+
+  #game-area{background:linear-gradient(135deg,var(--wood),#200e00);border:3px solid var(--copper);border-radius:14px;padding:15px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0}
+  .character{background:rgba(0,0,0,.5);border:2px solid var(--copper);border-radius:10px;padding:10px;text-align:center;cursor:pointer;transition:transform .1s;font-size:2rem}
+  .character:hover{transform:scale(1.05)}
+  .character:active{transform:scale(.95)}
+  .character.snitch{border-color:var(--fire);box-shadow:0 0 15px rgba(255,50,0,.5)}
+
+  #controls{display:flex;flex-direction:column;gap:10px}
+  .btn{background:linear-gradient(180deg,#FF9500,#CC2000);border:2px solid var(--sun);border-radius:25px;padding:12px 24px;color:var(--cream);font-family:'Rye',cursive;font-size:1rem;cursor:pointer;box-shadow:0 4px 0 #800;transition:all .1s;text-align:center}
+  .btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 0 #800}
+  .btn:active:not(:disabled){transform:translateY(2px);box-shadow:0 2px 0 #800}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+
+  #msg{background:rgba(0,0,0,.4);border:1px solid var(--copper);border-radius:8px;padding:10px;text-align:center;font-size:.85rem;color:var(--cream)}
+
+  #nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+  .nav-btn{padding:8px 16px;background:linear-gradient(135deg,var(--wood-l),var(--wood));border:2px solid var(--copper);border-radius:8px;color:var(--copper);font-size:.7rem;cursor:pointer;text-transform:uppercase;letter-spacing:1px}
+  .nav-btn:hover{border-color:var(--sun);color:var(--sun)}
+
+  #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(28,15,5,.97);border:2px solid var(--copper);border-radius:10px;padding:12px 24px;color:var(--sun);z-index:200;display:none;font-size:.9rem}
+  #toast.show{display:block;animation:toast-in .3s}
+  @keyframes toast-in{from{transform:translateX(-50%) translateY(20px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1)}
+
+  @media(max-width:400px){.character{font-size:1.6rem}}
+  </style>
+</head>
+<body>
+<div id="bg"></div>
+<div id="embers"></div>
+<div class="flame l"></div>
+<div class="flame r"></div>
+
+<div id="app">
+  <div>
+    <div class="title">👤 Who'd the Snitch</div>
+    <div class="sub">Find the Rat · Trailer Park Edition</div>
+  </div>
+
+  <div id="game-area"></div>
+
+  <div id="controls">
+    <div class="btn" id="guess-btn" onclick="makeGuess()">GUESS THE SNITCH! 🕵️</div>
+  </div>
+
+  <div id="msg">Click on a character to select, then guess! 🐀</div>
+
+  <div id="nav">
+    <button class="nav-btn" onclick="window.location.href='index.html'">🏠 Home</button>
+    <button class="nav-btn" onclick="window.location.href='games.html'">🎰 Games</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const CHARACTERS = ['👨‍🌾', '👩', '👴', '👵', '🧔', '👩‍🦰', '👨‍🔬', '🐷', '🐕'];
+let snitchIndex = -1;
+let selectedIndex = -1;
+
+function init(){
+  spawnEmbers();
+  newRound();
+}
+
+function spawnEmbers(){
+  const con = document.getElementById('embers');
+  for(let i=0;i<15;i++){
+    const e = document.createElement('div');
+    e.className = 'ember';
+    const sz = 2+Math.random()*4;
+    e.style.cssText = `left:${5+Math.random()*90}%;width:${sz}px;height:${sz}px;background:rgba(255,130,0,.8);--dx:${(Math.random()-.5)*80}px;animation-duration:${3+Math.random()*4}s;animation-delay:-${Math.random()*5}s`;
+    con.appendChild(e);
+  }
+}
+
+function newRound(){
+  snitchIndex = Math.floor(Math.random() * 9);
+  selectedIndex = -1;
+  renderCharacters();
+  document.getElementById('guess-btn').disabled = false;
+  document.getElementById('msg').textContent = 'Click on a character to select, then guess! 🐀';
+}
+
+function renderCharacters(){
+  const area = document.getElementById('game-area');
+  area.innerHTML = '';
+  for(let i=0;i<9;i++){
+    const char = document.createElement('div');
+    char.className = 'character';
+    char.textContent = CHARACTERS[i];
+    char.onclick = () => selectCharacter(i);
+    area.appendChild(char);
+  }
+}
+
+function selectCharacter(i){
+  selectedIndex = i;
+  const chars = document.querySelectorAll('.character');
+  chars.forEach((c, idx) => c.classList.toggle('snitch', idx === i));
+  document.getElementById('msg').textContent = 'Selected! Now click Guess!';
+}
+
+function makeGuess(){
+  if(selectedIndex === -1){
+    toast('Select a character first! 👆');
+    return;
+  }
+  const chars = document.querySelectorAll('.character');
+  if(selectedIndex === snitchIndex){
+    chars[selectedIndex].textContent = '🐀';
+    toast('Correct! You found the snitch! +$10 🤑');
+    setTimeout(newRound, 2000);
+  }else{
+    chars[snitchIndex].textContent = '🐀';
+    chars[selectedIndex].textContent = '❌';
+    toast('Wrong! The snitch was that one! Try again. 😠');
+    setTimeout(newRound, 3000);
+  }
+  document.getElementById('guess-btn').disabled = true;
+}
+
+let toastT;
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+init();
+</script>
+</body>
+</html></content>
+<parameter name="filePath">public/whod-the-snitch.html
