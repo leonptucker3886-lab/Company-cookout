@@ -15,7 +15,7 @@
   --card-bg:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
   --border:rgba(255,255,255,.1);--shadow:0 8px 32px rgba(0,0,0,.3);
 }
-html,body{min-height:100%;background:var(--bg-gradient);font-family:'Inter','SF Pro Display',sans-serif;color:var(--cream);overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+html,body{min-height:100%;background:var(--bg-gradient);font-family:'Inter','SF Pro Display',sans-serif;color:var(--cream);overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding-top:60px}
 
 /* ── ATMOSPHERE ── */
 #bg{position:fixed;inset:0;pointer-events:none;z-index:0;
@@ -41,11 +41,14 @@ html,body{min-height:100%;background:var(--bg-gradient);font-family:'Inter','SF 
 .pig-decor.l{left:2%}.pig-decor.r{right:2%;animation-delay:-3s}
 @keyframes sway{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
 
-/* ── PAGES ── */
-.page{position:relative;z-index:10;min-height:100vh;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;padding:30px 20px;gap:28px}
-.page{display:none}
-.page.active{display:flex}
+/* ── NAVIGATION ── */
+.nav-bar{position:fixed;top:0;left:0;right:0;z-index:1000;background:linear-gradient(135deg,rgba(28,15,5,.95),rgba(58,32,10,.95));border-bottom:2px solid var(--copper);box-shadow:0 0 20px rgba(0,0,0,.5)}
+.nav-container{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;max-width:1200px;margin:0 auto}
+.nav-logo{font-family:'Rye',cursive;font-size:1.5rem;color:var(--sun);text-shadow:0 0 10px rgba(255,215,0,.5)}
+.nav-links{display:flex;gap:20px}
+.nav-link{color:var(--copper);text-decoration:none;font-family:'Oswald',sans-serif;font-size:.9rem;letter-spacing:1px;text-transform:uppercase;padding:5px 10px;border-radius:5px;transition:all .2s}
+.nav-link:hover{color:var(--sun);background:rgba(255,215,0,.1)}
+.nav-link.active{color:var(--sun);background:var(--copper);font-weight:700}
 
 /* ── PAGE 1: LANDING ── */
 #p-land .logo-wrap{text-align:center}
@@ -250,6 +253,17 @@ html,body{min-height:100%;background:var(--bg-gradient);font-family:'Inter','SF 
 <div class="flame-R"></div>
 <div class="pig-decor l">🐷</div>
 <div class="pig-decor r">🐷</div>
+
+<!-- NAVIGATION -->
+<div class="nav-bar">
+  <div class="nav-container">
+    <div class="nav-logo">🐷 Sun N Fun</div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link active">Home</a>
+      <a href="games.html" class="nav-link">Games</a>
+    </div>
+  </div>
+</div>
 
 <!-- PAGE 1: LANDING -->
 <div class="page active" id="p-land">

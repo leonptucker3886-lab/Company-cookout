@@ -14,11 +14,19 @@
   --copper:#B87333;--copper-l:#D4894E;
   --cream:#FFF8DC;--green:#39FF14;--red:#FF4444;
 }
-body{background:var(--bg-deep);font-family:'Oswald',sans-serif;color:var(--cream);min-height:100vh;overflow-x:hidden}
+body{background:var(--bg-deep);font-family:'Oswald',sans-serif;color:var(--cream);min-height:100vh;overflow-x:hidden;padding-top:60px}
 input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 input[type=number]{-moz-appearance:textfield}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:rgba(0,0,0,.3)}
 ::-webkit-scrollbar-thumb{background:var(--copper);border-radius:3px}
+
+/* ── NAVIGATION ── */
+.nav-bar{position:fixed;top:0;left:0;right:0;z-index:1000;background:linear-gradient(135deg,rgba(28,15,5,.95),rgba(58,32,10,.95));border-bottom:2px solid var(--copper);box-shadow:0 0 20px rgba(0,0,0,.5)}
+.nav-container{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;max-width:1200px;margin:0 auto}
+.nav-logo{font-family:'Rye',cursive;font-size:1.5rem;color:var(--sun);text-shadow:0 0 10px rgba(255,215,0,.5)}
+.nav-links{display:flex;gap:20px}
+.nav-link{color:var(--copper);text-decoration:none;font-family:'Oswald',sans-serif;font-size:.9rem;letter-spacing:1px;text-transform:uppercase;padding:5px 10px;border-radius:5px;transition:all .2s}
+.nav-link:hover{color:var(--sun);background:rgba(255,215,0,.1)}
 
 #bg-layer{position:fixed;inset:0;pointer-events:none;z-index:0;
   background:radial-gradient(ellipse at 15% 95%,rgba(101,67,33,.4) 0%,transparent 45%),
@@ -321,6 +329,17 @@ input[type=number]{-moz-appearance:textfield}
 </style>
 </head>
 <body>
+
+<!-- NAVIGATION -->
+<div class="nav-bar">
+  <div class="nav-container">
+    <div class="nav-logo">🐷 Sun N Fun</div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="games.html" class="nav-link">Games</a>
+    </div>
+  </div>
+</div>
 
 <div id="bg-layer"></div>
 <div id="embers"></div>
