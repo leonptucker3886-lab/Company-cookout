@@ -112,15 +112,46 @@ function spawnEmbers(){
 }
 
 function attack(){
-  const damage = Math.floor(Math.random() * 20) + 10;
+  const rand = Math.random();
   if(turn === 'ray'){
-    mattHealth = Math.max(0, mattHealth - damage);
-    toast(`Ray punches Matt for ${damage} damage! 💥`);
-    turn = 'matt';
+    if(rand < 0.05){
+      // Ray grabs Matt
+      const damage = 20;
+      mattHealth = Math.max(0, mattHealth - damage);
+      toast(`Ray grabs Matt for ${damage} damage! Matt skips turn! 🤲`);
+      // Turn stays Ray
+    }else if(rand < 0.07){
+      // Ray gets April
+      toast(`Ray gets the April trump card! Ray wins instantly! 👑`);
+      mattHealth = 0;
+      updateUI();
+      endGame();
+      return;
+    }else{
+      const damage = Math.floor(Math.random() * 20) + 10;
+      mattHealth = Math.max(0, mattHealth - damage);
+      toast(`Ray punches Matt for ${damage} damage! 💥`);
+      turn = 'matt';
+    }
   }else{
-    rayHealth = Math.max(0, rayHealth - damage);
-    toast(`Matt punches Ray for ${damage} damage! 💥`);
-    turn = 'ray';
+    if(rand < 0.05){
+      // Matt calls in liquor
+      const heal = 30;
+      mattHealth = Math.min(100, mattHealth + heal);
+      toast(`Matt calls in liquor! Heals ${heal} health! 🍺`);
+      turn = 'ray';
+    }else if(rand < 0.15){
+      // Matt uses Poppin sling
+      const damage = 40;
+      rayHealth = Math.max(0, rayHealth - damage);
+      toast(`Matt uses Poppin sling for ${damage} damage! 🪃`);
+      turn = 'ray';
+    }else{
+      const damage = Math.floor(Math.random() * 20) + 10;
+      rayHealth = Math.max(0, rayHealth - damage);
+      toast(`Matt punches Ray for ${damage} damage! 💥`);
+      turn = 'ray';
+    }
   }
   updateUI();
   if(rayHealth <= 0 || mattHealth <= 0){
