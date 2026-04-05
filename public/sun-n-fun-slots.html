@@ -59,7 +59,12 @@ input[type=number]{-moz-appearance:textfield}
 .login-btn:active{transform:translateY(3px);box-shadow:0 2px 0 #800}
 .login-err{color:var(--red);font-size:.82rem;margin-top:10px;display:none}
 .login-err.show{display:block}
-.login-hint{color:rgba(184,115,51,.45);font-size:.62rem;margin-top:14px;letter-spacing:1px}
+.login-options{display:flex;gap:8px;margin-top:12px}
+.guest-btn,.signup-btn{flex:1;padding:10px;border-radius:10px;border:2px solid var(--copper);color:var(--cream);font-family:'Oswald',sans-serif;font-size:.8rem;cursor:pointer;transition:all .2s}
+.guest-btn{background:linear-gradient(135deg,var(--wood-mid),var(--wood-dark))}
+.guest-btn:hover{background:var(--wood-light);transform:translateY(-1px)}
+.signup-btn{background:linear-gradient(135deg,#8B4513,#D2691E)}
+.signup-btn:hover{background:linear-gradient(135deg,#A0522D,#DEB887)}
 
 /* MAIN */
 #app{position:relative;z-index:10;max-width:680px;margin:0 auto;padding:12px 12px 60px;
@@ -333,7 +338,22 @@ input[type=number]{-moz-appearance:textfield}
     <input type="password" class="lf" id="lp" placeholder="PIN">
     <button class="login-btn" onclick="doLogin()">🍺 Let's Party! 🎰</button>
     <div class="login-err" id="lerr">Invalid username or PIN. Try again!</div>
-    <div class="login-hint">Default admin: admin / 1234</div>
+    <div class="login-options">
+      <button class="guest-btn" onclick="doGuestLogin()">👤 Play as Guest</button>
+      <button class="signup-btn" onclick="showSignup()">📝 Sign Up</button>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNUP MODAL -->
+<div id="signup-modal" class="mo">
+  <div class="mb" style="max-width:340px">
+    <div class="m-title">📝 Create Account</div>
+    <button class="m-close" onclick="closeSignup()">✕</button>
+    <input type="text" class="af" id="su" placeholder="Choose Username" autocomplete="off">
+    <input type="password" class="af" id="sp" placeholder="Choose PIN (4+ characters)">
+    <button class="ab" onclick="doSignup()">Create Account</button>
+    <div id="signup-err" style="color:var(--red);font-size:.8rem;text-align:center;display:none"></div>
   </div>
 </div>
 
@@ -662,6 +682,53 @@ function doLogout(){
   el('login-screen').style.display='';
   el('app').style.display='none';
   el('lu').value=''; el('lp').value='';
+}
+function doGuestLogin(){
+  const guest={
+    id:'guest_'+Date.now(), username:'Guest', pin:'guest',
+    beerMoney:40, nails:200, isAdmin:false, isMod:false,
+    freeSpins:0, streak:0, lastCollect:null, isGuest:true
+  };
+  G.users.push(guest);
+  save();
+  G.cu=guest;
+  el('login-screen').style.display='none';
+  el('app').style.display='';
+  el('admin-btn').style.display='none';
+  buildPaytable();
+  refreshUI();
+  spawnEmbers();
+  setSpd('normal');
+  toast(`👤 Welcome, Guest! You have 200 nails and 40 Beer Money 🍺`);
+}
+function showSignup(){
+  el('signup-modal').classList.add('open');
+  el('su').value=''; el('sp').value='';
+  el('signup-err').style.display='none';
+}
+function closeSignup(){
+  el('signup-modal').classList.remove('open');
+}
+function doSignup(){
+  const un=el('su').value.trim();
+  const pin=el('sp').value.trim();
+  if(!un||un.length<2){ showSignupErr('Username must be at least 2 characters'); return; }
+  if(!pin||pin.length<4){ showSignupErr('PIN must be at least 4 characters'); return; }
+  if(G.users.find(u=>u.username.toLowerCase()===un.toLowerCase())){ showSignupErr('Username already taken'); return; }
+  const newUser={
+    id:'u_'+Date.now(), username:un, pin:pin,
+    beerMoney:40, nails:200, isAdmin:false, isMod:false,
+    freeSpins:0, streak:0, lastCollect:null
+  };
+  G.users.push(newUser);
+  save();
+  closeSignup();
+  el('lu').value=un; el('lp').value=pin;
+  doLogin();
+  toast(`🎉 Account created! Welcome, ${un}!`);
+}
+function showSignupErr(msg){
+  const e=el('signup-err'); e.textContent=msg; e.style.display='block';
 }
 
 // ── UI ──
