@@ -49,9 +49,10 @@ html,body{min-height:100%;background:var(--bg-gradient);font-family:'Inter','SF 
   letter-spacing:2px;cursor:pointer;padding:5px 14px;transition:all .2s;text-transform:uppercase}
 .back-btn:hover{border-color:var(--copper);color:var(--copper)}
 
-.games-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;width:100%;max-width:1400px;margin:0 auto}
+.games-grid{display:flex;gap:18px;width:100%;max-width:1400px;margin:0 auto;overflow-x:auto;padding-bottom:10px}
+.games-grid::-webkit-scrollbar{height:5px;}
 
-.game-preview-wrap{width:100%;cursor:pointer;position:relative;border-radius:16px;overflow:hidden;
+.game-preview-wrap{width:220px;flex-shrink:0;cursor:pointer;position:relative;border-radius:16px;overflow:hidden;
   box-shadow:var(--shadow);backdrop-filter:blur(10px);
   background:var(--card-bg);border:1px solid var(--border);
   transition:all .3s cubic-bezier(0.4,0,0.2,1);transform-origin:center}
