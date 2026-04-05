@@ -403,7 +403,7 @@ input[type=number]{-moz-appearance:textfield}
             <div class="center-hl"></div>
             <div class="reel-inner" id="ri-0">
               <div class="sym">🚬</div>
-              <div class="sym">🦹</div>
+              <div class="sym">🌿</div>
               <div class="sym">🍺</div>
             </div>
           </div>
@@ -420,7 +420,7 @@ input[type=number]{-moz-appearance:textfield}
             <div class="reel-inner" id="ri-2">
               <div class="sym">🏕</div>
               <div class="sym">🍺</div>
-              <div class="sym">🦹</div>
+              <div class="sym">🌿</div>
             </div>
           </div>
         </div>
@@ -481,6 +481,11 @@ input[type=number]{-moz-appearance:textfield}
     <button class="m-close" onclick="closeM('m-pay')">✕</button>
     <div class="pt-sec">3 of a Kind on a Payline — Pays × Bet Amount</div>
     <div id="pt-body"></div>
+    <div class="pt-sec" style="margin-top:14px">🌿 Wild — Matches any symbol except Truck & Gun</div>
+    <div class="pt-row"><div class="pt-sym">🌿</div><div class="pt-name">Wild (acts as any symbol)</div><div class="pt-pay">Varies</div></div>
+    <div class="pt-sec" style="margin-top:14px">🔫 Super Gun — Rare Special Token</div>
+    <div class="pt-row"><div class="pt-sym">🔫🔫</div><div class="pt-name">2 Guns anywhere</div><div class="pt-pay">×25</div></div>
+    <div class="pt-row"><div class="pt-sym">🔫🔫🔫</div><div class="pt-name">3 Guns anywhere</div><div class="pt-pay">×150</div></div>
     <div class="pt-sec" style="margin-top:14px">Scatter — Bra 👙 (Anywhere on Reels)</div>
     <div class="pt-row"><div class="pt-sym">👙👙</div><div class="pt-name">2 Bras anywhere</div><div class="pt-pay">×2</div></div>
     <div class="pt-row"><div class="pt-sym">👙👙👙+</div><div class="pt-name">3+ Bras anywhere</div><div class="pt-pay">×10 + 10 Free Spins</div></div>
@@ -590,12 +595,13 @@ input[type=number]{-moz-appearance:textfield}
 
 const SYMS = [
   { id:'cigarette', e:'🚬', name:'Lucky Strike',        w:28, p3:3  },
-  { id:'corn',      e:'🦹', name:'Criminal',          w:22, p3:5  },
+  { id:'pot',       e:'🌿', name:'Pot Leaf',           w:22, p3:5, wild:true },
   { id:'beer',      e:'🍺', name:'Cold One',             w:16, p3:8  },
   { id:'dog',       e:'🐕', name:"Ol' Hound Dog",        w:12, p3:12 },
   { id:'fish',      e:'🚛', name:'Mobile Home',         w:10, p3:20 },
   { id:'camper',    e:'🏕', name:'Pop-Up Camper',        w:6,  p3:40 },
   { id:'truck',     e:'🛻', name:"Rusty Beater Truck",   w:4,  p3:80 },
+  { id:'gun',       e:'🔫', name:'Super Gun',            w:2,  p3:0, isSuper:true },
   { id:'bra',       e:'👙', name:'Bra (Scatter)',        w:2,  scatter:true, p3:0 }
 ];
 
@@ -817,21 +823,37 @@ function mkGrid(){
 }
 // grid[reel][row]
 function evalGrid(grid, bet){
-  let total=0, winLines=[], scatterCount=0, freeSpinsGiven=0;
-  // paylines
+  let total=0, winLines=[], scatterCount=0, freeSpinsGiven=0, gunCount=0;
+  
+  // Count guns (super token)
+  for(let r=0;r<3;r++) for(let row=0;row<3;row++) if(grid[r][row].isSuper) gunCount++;
+  if(gunCount>=2){
+    const gunPayout = gunCount === 2 ? 25 : 150;
+    total += bet * gunPayout;
+  }
+  
+  // paylines with wild support
   for(let p=0;p<PAYLINES.length;p++){
     const pl=PAYLINES[p];
     const s0=grid[0][pl[0]], s1=grid[1][pl[1]], s2=grid[2][pl[2]];
-    if(!s0.scatter&&!s1.scatter&&!s2.scatter&&s0.id===s1.id&&s1.id===s2.id){
-      total+=bet*s0.p3;
-      winLines.push(p);
+    if(s0.scatter||s1.scatter||s2.scatter) continue;
+    
+    // Check for match or wild match
+    const isMatch = (a,b,w) => a.id===b.id || (a.wild && b.id!==w && b.id!==a.id) || (b.wild && a.id!==w && a.id!==b.id);
+    if(isMatch(s0,s1,'truck') && isMatch(s1,s2,'truck')){
+      const sym = s0.wild ? s1.id === 'truck' ? s2 : s1 : s0;
+      const symData = SYMS.find(s => s.id === sym.id);
+      if(symData) {
+        total+=bet*symData.p3;
+        winLines.push(p);
+      }
     }
   }
   // scatter count
   for(let r=0;r<3;r++) for(let row=0;row<3;row++) if(grid[r][row].scatter) scatterCount++;
   if(scatterCount>=3){ total+=bet*10; freeSpinsGiven=10; }
   else if(scatterCount===2){ total+=bet*2; }
-  return { total, winLines, scatterCount, freeSpinsGiven };
+  return { total, winLines, scatterCount, freeSpinsGiven, gunCount };
 }
 function checkJackpot(grid){
   for(const pl of PAYLINES){
@@ -850,8 +872,28 @@ function adaptGrid(grid){
     grid[0][1]=rndSym(); grid[1][1]=rndSym(); grid[2][1]=rndSym();
   } else if(rtp<0.90&&Math.random()<.25){
     // nudge toward a small win — same low-pay symbol on middle row
-    const s=SYMS[Math.floor(Math.random()*3)]; // cigarette/corn/alcohol
+    const s=SYMS[Math.floor(Math.random()*3)]; // cigarette/pot/beer
     grid[0][1]=s; grid[1][1]=s;
+  }
+  // Random bonus chance: add wilds
+  if(Math.random()<.08){
+    const wilds = SYMS.filter(s => s.wild);
+    if(wilds.length){
+      const w = wilds[0];
+      const ri = Math.floor(Math.random()*3);
+      const row = Math.floor(Math.random()*3);
+      grid[ri][row] = w;
+    }
+  }
+  // Random super token chance
+  if(Math.random()<.03){
+    const guns = SYMS.filter(s => s.isSuper);
+    if(guns.length){
+      const g = guns[0];
+      const ri = Math.floor(Math.random()*3);
+      const row = Math.floor(Math.random()*3);
+      grid[ri][row] = g;
+    }
   }
   return grid;
 }
@@ -895,7 +937,7 @@ function spin(){
         showWinDisplay(res);
       } else {
         const q=['🐷 Oink! Better luck next spin!','🔥 Keep that fire burning!',
-          '🦹 Almost convicting!','🍺 Another round!','🏕 Camp harder, win bigger!',
+          '🌿 Almost convicting!','🍺 Another round!','🏕 Camp harder, win bigger!',
           '⚡ Charge it up and try again!','🚬 Light one and spin again...'];
         setMsg(q[Math.floor(Math.random()*q.length)]);
       }
@@ -939,7 +981,7 @@ function clearWinDisplay(){
   el('win-sub').classList.remove('show');
   for(let r=0;r<3;r++) el(`ri-${r}`).querySelectorAll('.sym').forEach(c=>c.classList.remove('winner'));
 }
-function showWinDisplay({total,winLines,scatterCount,freeSpinsGiven}){
+function showWinDisplay({total,winLines,scatterCount,freeSpinsGiven,gunCount}){
   winLines.forEach(li=>{
     PAYLINES[li].forEach((row,reel)=>{
       el(`ri-${reel}`).querySelectorAll('.sym')[row].classList.add('winner');
@@ -950,10 +992,17 @@ function showWinDisplay({total,winLines,scatterCount,freeSpinsGiven}){
       el(`ri-${r}`).querySelectorAll('.sym').forEach(c=>{ if(c.dataset.id==='bra') c.classList.add('winner'); });
     }
   }
+  // Highlight guns
+  if(gunCount>=1){
+    for(let r=0;r<3;r++){
+      el(`ri-${r}`).querySelectorAll('.sym').forEach(c=>{ if(c.dataset.id==='gun') c.classList.add('winner'); });
+    }
+  }
   el('win-txt').textContent=`WIN! 💰 ${total.toFixed(2)}`;
   el('win-txt').classList.add('show');
   let sub='';
-  if(freeSpinsGiven>0) sub=`🎰 ${freeSpinsGiven} FREE SPINS AWARDED!`;
+  if(gunCount>=2) sub=`🔫 SUPER! ${gunCount===2?'x25':'x150'} BET!`;
+  else if(freeSpinsGiven>0) sub=`🎰 ${freeSpinsGiven} FREE SPINS AWARDED!`;
   else if(scatterCount>=2) sub=`👙 Scatter ×${scatterCount}!`;
   else if(winLines.length>1) sub=`🔥 ${winLines.length} Lines Hit!`;
   else sub='💰 Payline Win!';
@@ -994,13 +1043,24 @@ function launchConfetti(){
 function buildPaytable(){
   const body=el('pt-body');
   body.innerHTML='';
-  SYMS.filter(s=>!s.scatter).forEach(s=>{
+  SYMS.filter(s=>!s.scatter&&!s.isSuper).forEach(s=>{
+    let name = s.name;
+    if(s.wild) name += ' (Wild)';
     body.innerHTML+=`<div class="pt-row">
       <div class="pt-sym">${s.e}</div>
-      <div class="pt-name">${s.name}</div>
+      <div class="pt-name">${name}</div>
       <div class="pt-pay">×${s.p3}</div>
     </div>`;
   });
+  // Add super gun info
+  const gun = SYMS.find(s => s.isSuper);
+  if(gun){
+    body.innerHTML+=`<div class="pt-row">
+      <div class="pt-sym">${gun.e}</div>
+      <div class="pt-name">${gun.name} (2=x25, 3=x150)</div>
+      <div class="pt-pay">SPECIAL</div>
+    </div>`;
+  }
 }
 
 // ── MODALS ──
