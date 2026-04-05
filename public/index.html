@@ -70,10 +70,10 @@ html,body{min-height:100%;background:var(--bg-gradient);font-family:'Inter','SF 
 @keyframes badge-pulse{0%,100%{opacity:.5}50%{opacity:1}}
 
 .presents{font-size:clamp(.8rem,3vw,1.2rem);color:var(--copper);letter-spacing:3px;text-transform:uppercase;text-align:center;margin-bottom:1rem;font-weight:500}
-.sun-fence{position:relative;width:clamp(200px,50vw,300px);height:clamp(120px,30vw,180px);margin:0 auto;cursor:pointer;border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.4);transition:transform .3s ease}
-.sun-fence:hover{transform:translateY(-4px)}
-.fence-bg{position:absolute;inset:0;background:linear-gradient(135deg,#8B4513,#D2691E,#A0522D,#8B4513);background-image:repeating-linear-gradient(90deg,transparent,transparent 10px,rgba(139,69,19,.3) 10px,rgba(139,69,19,.3) 12px),repeating-linear-gradient(0deg,transparent,transparent 20px,rgba(160,82,45,.2) 20px,rgba(160,82,45,.2) 22px)}
-.fence-title{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Rye',cursive;font-size:clamp(2rem,8vw,3rem);color:var(--sun);text-shadow:0 0 20px rgba(255,215,0,.8),2px 2px 0 var(--fire),4px 4px 0 #600;letter-spacing:2px;text-align:center}
+.sun-fence{position:relative;width:clamp(250px,60vw,350px);height:clamp(150px,35vw,200px);margin:0 auto;cursor:pointer;border-radius:15px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.5),inset 0 2px 0 rgba(255,255,255,.1);transition:transform .3s ease;border:4px solid #654321}
+.sun-fence:hover{transform:translateY(-6px)}
+.fence-bg{position:absolute;inset:0;background:linear-gradient(135deg,#654321,#8B4513,#A0522D,#654321);background-image:radial-gradient(circle at 20% 20%,rgba(101,67,33,.4) 0%,transparent 50%),radial-gradient(circle at 80% 80%,rgba(139,69,19,.3) 0%,transparent 50%),repeating-linear-gradient(45deg,transparent,transparent 5px,rgba(0,0,0,.1) 5px,rgba(0,0,0,.1) 6px)}
+.fence-title{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Rye',cursive;font-size:clamp(2.5rem,10vw,3.5rem);color:var(--sun);text-shadow:0 0 25px rgba(255,215,0,.9),3px 3px 0 var(--fire),5px 5px 0 #600;letter-spacing:3px;text-align:center}
 .tagline{font-size:clamp(.7rem,2vw,.85rem);color:var(--accent);letter-spacing:1px;text-align:center;font-weight:500;opacity:.8}
 
 /* ── PAGE 2: ABOUT ── */
