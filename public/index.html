@@ -259,87 +259,28 @@ html,body{min-height:100%;background:var(--bg-gradient);font-family:'Inter','SF 
   </div>
 
   <div>
-    <div class="main-title">Premium Gaming<br>Experience</div>
-    <div class="main-sub" style="color:var(--accent);font-weight:400;margin-top:.5rem">11 Exclusive Games · Mobile Optimized</div>
+    <div class="main-title">Sun N Fun<br>Slots</div>
+    <div class="main-sub">Kick the Pig</div>
   </div>
 
+  <button class="enter-btn" onclick="enterSite()">🎰 ENTER CASINO 🎰</button>
+  <div class="tagline">Premium Gaming Experience · Mobile Optimized</div>
 </div>
 
 <!-- GAMES PAGE -->
-<div class="page active" id="p-about">
+<div class="page" id="p-about">
+  <button class="back-btn" onclick="goBack()">← Back</button>
 
-  <div class="about-card">
-    <div class="about-header">☀️ Sun N Fun Slots ☀️</div>
-    <div class="about-body">
-      <p style="font-size:1.1rem;line-height:1.6;color:var(--cream);margin-bottom:1rem">
-        Experience our curated collection of premium gaming entertainment. Each game features unique mechanics, stunning visuals, and fair play with built-in house advantages.
-      </p>
-      <p style="font-size:.9rem;color:var(--accent);font-weight:500;text-align:center">
-        🎰 Professional Gaming · Mobile Optimized · Fair Play
-      </p>
-    </div>
+  <div style="text-align:center;padding:2rem 0">
+    <div style="font-size:4rem;margin-bottom:1rem">🎰</div>
+    <div style="font-family:'Inter',sans-serif;font-size:2rem;font-weight:700;color:var(--cream);margin-bottom:0.5rem">Sun N Fun Slots</div>
+    <div style="font-size:1.1rem;color:var(--accent);margin-bottom:2rem">Premium 3-Reel Progressive Slots</div>
+    <button class="enter-btn" onclick="window.location.href='sun-n-fun-slots.html'" style="font-size:1.2rem;padding:1rem 2rem">🎰 PLAY NOW 🎰</button>
+  </div>
+</div>
   </div>
 
-  <div class="game-section">
-    <div class="game-section-lbl">🎮 All Games 🎮</div>
-    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;width:100%">
-      <div class="game-preview-wrap" onclick="window.location.href='sun-n-fun-slots.html'" style="padding:15px">
-        <div style="font-size:2.5rem;margin-bottom:8px;text-shadow:0 2px 4px rgba(0,0,0,.3)">🐷</div>
-        <div style="font-family:'Inter',sans-serif;color:var(--cream);font-size:.9rem;font-weight:600;margin-bottom:4px">Classic Slots</div>
-        <div style="font-size:.7rem;color:var(--accent);font-weight:400">3-Reel Progressive</div>
-      </div>
-      <div class="game-preview-wrap" onclick="window.location.href='hold-and-win.html'" style="padding:15px">
-        <div style="font-size:2.5rem;margin-bottom:8px;text-shadow:0 2px 4px rgba(0,0,0,.3)">🍺</div>
-        <div style="font-family:'Inter',sans-serif;color:var(--cream);font-size:.9rem;font-weight:600;margin-bottom:4px">Hold & Win</div>
-        <div style="font-size:.7rem;color:var(--accent);font-weight:400">Respin Mechanics</div>
-      </div>
-      <div class="game-preview-wrap" onclick="window.location.href='cluster-crush.html'" style="padding:15px">
-        <div style="font-size:2.5rem;margin-bottom:8px;text-shadow:0 2px 4px rgba(0,0,0,.3)">🌽</div>
-        <div style="font-family:'Inter',sans-serif;color:var(--cream);font-size:.9rem;font-weight:600;margin-bottom:4px">Cluster Crush</div>
-        <div style="font-size:.7rem;color:var(--accent);font-weight:400">Match-3 Cascade</div>
-      </div>
-      <div class="game-preview-wrap" onclick="window.location.href='moonshine-megaways.html'" style="padding:15px">
-        <div style="font-size:2.5rem;margin-bottom:5px">🍶</div>
-        <div style="font-family:'Rye';color:var(--sun);font-size:.85rem">Moonshine Megaways</div>
-        <div style="font-size:.6rem;color:var(--copper)">46,656 ways!</div>
-      </div>
-      <div class="game-preview-wrap" onclick="window.location.href='fight-or-run.html'" style="padding:15px">
-        <div style="font-size:2.5rem;margin-bottom:5px">⚔️</div>
-        <div style="font-family:'Rye';color:var(--sun);font-size:.85rem">Fight or Run</div>
-        <div style="font-size:.6rem;color:var(--copper)">Battle arena!</div>
-      </div>
-      <div class="game-preview-wrap" onclick="window.location.href='pick-em.html'" style="padding:15px">
-        <div style="font-size:2.5rem;margin-bottom:5px">🖐️</div>
-        <div style="font-family:'Rye';color:var(--sun);font-size:.85rem">Trailer Park Pick'em</div>
-        <div style="font-size:.6rem;color:var(--copper)">Pick 3 cards!</div>
-      </div>
-      <div class="game-preview-wrap" onclick="window.location.href='absconding.html'" style="padding:15px">
-        <div style="font-size:2.5rem;margin-bottom:5px">🏃‍♂️</div>
-        <div style="font-family:'Rye';color:var(--sun);font-size:.85rem">Absconding</div>
-        <div style="font-size:.6rem;color:var(--copper)">Jailbreak escape!</div>
-      </div>
-      <div class="game-preview-wrap" onclick="window.location.href='show-me-your-pitties.html'" style="padding:15px">
-        <div style="font-size:2.5rem;margin-bottom:5px">🐕</div>
-        <div style="font-family:'Rye';color:var(--sun);font-size:.85rem">Show Me Your Pitties</div>
-        <div style="font-size:.6rem;color:var(--copper)">Pitbull showcase!</div>
-      </div>
-      <div class="game-preview-wrap" onclick="window.location.href='destinated-drunk.html'" style="padding:15px">
-        <div style="font-size:2.5rem;margin-bottom:5px">🍺</div>
-        <div style="font-family:'Rye';color:var(--sun);font-size:.85rem">Destinated Drunk</div>
-        <div style="font-size:.6rem;color:var(--copper)">Crash into trees!</div>
-      </div>
-      <div class="game-preview-wrap" onclick="window.location.href='white-jack.html'" style="padding:15px">
-        <div style="font-size:2.5rem;margin-bottom:5px">🃏</div>
-        <div style="font-family:'Rye';color:var(--sun);font-size:.85rem">White Jack</div>
-        <div style="font-size:.6rem;color:var(--copper)">Trailer blackjack!</div>
-      </div>
-      <div class="game-preview-wrap" onclick="window.location.href='shannon-cannon.html'" style="padding:15px">
-        <div style="font-size:2.5rem;margin-bottom:5px">💥</div>
-        <div style="font-family:'Rye';color:var(--sun);font-size:.85rem">Shannon Cannon</div>
-        <div style="font-size:.6rem;color:var(--copper)">Shoot FedEx trucks!</div>
-      </div>
-    </div>
-  </div>
+
 </div>
 
 

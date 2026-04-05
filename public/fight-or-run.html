@@ -249,7 +249,7 @@ function engage(){
   }
 
   // Apply house protection
-  const houseEdge = Math.floor(winAmount * 0.88); // 12% house edge
+  const houseEdge = Math.floor(winAmount * 0.95); // 5% house edge (95% RTP)
   const maxPay = G.reserves + 20;
   const safeWin = houseEdge > maxPay ? maxPay : houseEdge;
   G.reserves = Math.max(0, G.reserves - safeWin);

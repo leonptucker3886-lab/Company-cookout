@@ -258,7 +258,7 @@ function cashOut(){
   const win = G.bet * G.multiplier;
 
   // Apply house edge
-  const houseWin = Math.floor(win * 0.9);
+  const houseWin = Math.floor(win * 0.97); // 3% house edge (97% RTP)
   const safeWin = Math.min(houseWin, G.reserves);
   G.reserves = Math.max(0, G.reserves - safeWin);
   G.money += safeWin;
@@ -284,7 +284,7 @@ function windowCrash(){
   G.flying = false;
   // Bonus multiplier for flying through window
   const baseWin = G.bet * G.multiplier * G.crashMultiplier;
-  const houseWin = Math.floor(baseWin * 0.85); // Higher house edge for crashes
+  const houseWin = Math.floor(baseWin * 0.92); // 8% house edge for crashes (92% RTP)
   const safeWin = Math.min(houseWin, G.reserves);
   G.reserves = Math.max(0, G.reserves - safeWin);
   G.money += safeWin;

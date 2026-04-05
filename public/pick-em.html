@@ -124,7 +124,7 @@ const el = id => document.getElementById(id);
 
 // ── HOUSE PROTECTION ──
 function applyHouseEdge(amount){
-  return Math.floor(amount * 0.87); // 13% house edge
+  return Math.floor(amount * 0.96); // 4% house edge (96% RTP)
 }
 function checkHouseBalance(){
   if(G.reserves < 25){

@@ -787,8 +787,8 @@ function evalGrid(grid, bet){
   if(scatterCount>=3){ total+=bet*10; freeSpinsGiven=10; }
   else if(scatterCount===2){ total+=bet*2; }
 
-  // HOUSE EDGE PROTECTION: Apply 5% house edge
-  total = Math.floor(total * 0.95);
+  // VEGAS RTP: Apply 2% house edge (98% RTP)
+  total = Math.floor(total * 0.98);
 
   // HOUSE CAN'T GO BROKE: If win would exceed house balance + reserves, cap it
   const maxWin = G.reserves + 100; // Keep at least $100 in reserves

@@ -202,7 +202,7 @@ function showPitbull(){
     if(finalScore > G.bestScore) G.bestScore = finalScore;
 
     // Apply house edge and protection
-    const houseEdge = Math.floor(finalScore * 0.85); // 15% house edge
+    const houseEdge = Math.floor(finalScore * 0.95); // 5% house edge (95% RTP)
     const maxPay = G.reserves + 15;
     const safeWin = houseEdge > maxPay ? maxPay : houseEdge;
     G.reserves = Math.max(0, G.reserves - safeWin);

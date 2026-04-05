@@ -129,7 +129,7 @@ const rnd = () => Math.floor(Math.random()*POOL.length);
 
 // ── HOUSE PROTECTION ──
 function applyHouseEdge(amount){
-  return Math.floor(amount * 0.88); // 12% house edge
+  return Math.floor(amount * 0.97); // 3% house edge (97% RTP)
 }
 function checkHouseBalance(){
   if(G.reserves < 30){
