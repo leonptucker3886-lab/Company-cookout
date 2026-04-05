@@ -344,13 +344,13 @@ body{background:var(--bg-deep);font-family:'Oswald',sans-serif;color:var(--cream
 
 function enterSite(){
   document.getElementById('p-land').classList.remove('active');
-  setTimeout(()=>{ document.getElementById('p-about').classList.add('active'); }, 80);
+  document.getElementById('p-about').classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
 function goBack(){
   document.getElementById('p-about').classList.remove('active');
-  setTimeout(()=>{ document.getElementById('p-land').classList.add('active'); }, 80);
+  document.getElementById('p-land').classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
