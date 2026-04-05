@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🍺 Destinated Drunk</title>
+<link href="https://fonts.googleapis.com/css2?family=Rye&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0500;--wood:#1a1008;--wood-l:#2a1a0a;--copper:#B87333;
+  --sun:#FFD700;--cream:#FFF8DC;--fire:#FF3300;--blue:#4169E1;--green:#39FF14;
+}
+body{background:var(--bg);font-family:'Oswald',sans-serif;color:var(--cream);min-height:100vh;overflow:hidden}
+#bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 50% 95%,rgba(101,67,33,.35) 0%,transparent 50%),linear-gradient(180deg,#2a1a0a,#3a2510,#4a3215,#5a3f1a)}
+
+#game-container{max-width:600px;margin:0 auto;padding:15px;position:relative;z-index:10;display:flex;flex-direction:column;gap:12px}
+.title{font-family:'Rye',cursive;font-size:2.5rem;color:var(--sun);text-align:center;text-shadow:0 0 25px rgba(255,215,0,.6),3px 3px 0 var(--fire)}
+.sub{font-size:.6rem;color:var(--copper);text-align:center;letter-spacing:4px;text-transform:uppercase;margin-bottom:15px}
+
+#stats-bar{background:linear-gradient(135deg,rgba(30,18,8,.95),rgba(50,30,15,.95));border:2px solid var(--copper);border-radius:12px;padding:12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.stat-item{display:flex;flex-direction:column;align-items:center}
+.stat-lbl{font-size:.45rem;color:var(--copper);text-transform:uppercase;letter-spacing:2px}
+.stat-val{font-size:1.1rem;font-weight:700;color:var(--sun)}
+
+#game-area{position:relative;width:100%;height:300px;background:linear-gradient(180deg,#87CEEB,#98FB98,#228B22);border:4px solid var(--copper);border-radius:12px;overflow:hidden;margin:10px 0}
+#ground{position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(180deg,#8B4513,#654321);border-top:2px solid #654321}
+#trees{position:absolute;bottom:60px;left:0;right:0;height:100px;pointer-events:none}
+.tree{position:absolute;bottom:0;font-size:3rem;opacity:.8;color:#228B22;text-shadow:1px 1px 2px rgba(0,0,0,.5)}
+.tree:nth-child(odd){transform:scaleX(-1)}
+#trailer{position:absolute;bottom:60px;left:50px;width:80px;height:40px;background:linear-gradient(135deg,#8B4513,#D2691E);border:2px solid #654321;border-radius:8px 8px 0 0}
+#trailer::before{content:'🏠';position:absolute;top:5px;left:50%;transform:translateX(-50%);font-size:1.2rem}
+#window{position:absolute;bottom:75px;left:80px;width:30px;height:25px;background:#87CEEB;border:2px solid #654321;border-radius:4px}
+
+#drunk{position:absolute;bottom:60px;left:50px;font-size:2.5rem;z-index:10;transform-origin:center;animation:drunk-wobble 1s infinite}
+@keyframes drunk-wobble{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+
+#flight-path{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5}
+.flight-trail{position:absolute;width:4px;height:4px;background:var(--fire);border-radius:50%;opacity:.6}
+
+#ui-overlay{position:absolute;top:10px;left:10px;right:10px;pointer-events:none;z-index:15}
+#multiplier{display:none;position:absolute;top:10px;left:50%;transform:translateX(-50%);font-family:'Rye',cursive;font-size:3rem;color:var(--sun);text-shadow:0 0 20px rgba(255,215,0,.8);background:rgba(0,0,0,.7);padding:10px 20px;border-radius:15px;border:3px solid var(--copper)}
+#cash-out-btn{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);padding:15px 30px;background:linear-gradient(180deg,#FFD700,#FFA500);border:3px solid #FF4500;border-radius:25px;color:#000;font-family:'Rye',cursive;font-size:1.5rem;cursor:pointer;box-shadow:0 5px 0 #8B4513;pointer-events:auto;display:none}
+#cash-out-btn:hover{transform:translateX(-50%) translateY(-2px);box-shadow:0 7px 0 #8B4513}
+#cash-out-btn:active{transform:translateX(-50%) translateY(3px);box-shadow:0 2px 0 #8B4513}
+
+#launch-btn{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);padding:20px 40px;background:linear-gradient(180deg,#FF6B1A,#FF4500);border:4px solid var(--sun);border-radius:30px;color:var(--cream);font-family:'Rye',cursive;font-size:1.8rem;cursor:pointer;box-shadow:0 6px 0 #8B0000;text-shadow:1px 1px 3px rgba(0,0,0,.7)}
+#launch-btn:hover{transform:translateX(-50%) translateY(-3px);box-shadow:0 9px 0 #8B0000}
+#launch-btn:active{transform:translateX(-50%) translateY(3px);box-shadow:0 3px 0 #8B0000}
+
+#crash-overlay{position:fixed;inset:0;background:rgba(255,0,0,.8);z-index:100;display:none;align-items:center;justify-content:center;flex-direction:column;animation:crash-flash 0.5s}
+@keyframes crash-flash{0%{background:rgba(255,0,0,.8)}50%{background:rgba(255,255,255,.9)}100%{background:rgba(255,0,0,.8)}}
+#crash-text{font-family:'Rye',cursive;font-size:4rem;color:#fff;text-shadow:3px 3px 0 #000;animation:crash-bounce 0.5s}
+@keyframes crash-bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+
+#result-screen{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:linear-gradient(180deg,var(--wood-l),var(--wood));border:4px solid var(--copper);border-radius:20px;padding:30px;text-align:center;z-index:200;display:none;max-width:400px;width:90%}
+.result-title{font-family:'Rye',cursive;font-size:2.5rem;color:var(--sun);margin-bottom:15px}
+.result-amount{font-size:2rem;color:var(--green);font-weight:700;margin-bottom:20px;font-family:'Rye',cursive}
+.result-btn{background:linear-gradient(135deg,#FFD700,#FFA500);border:3px solid var(--sun);border-radius:15px;padding:12px 25px;color:#000;font-family:'Rye',cursive;font-size:1.2rem;cursor:pointer;margin:5px}
+
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(28,15,5,.97);border:2px solid var(--copper);border-radius:10px;padding:12px 24px;color:var(--sun);z-index:300;display:none}
+#toast.show{display:block;animation:toast-in .3s}
+@keyframes toast-in{from{transform:translateX(-50%) translateY(20px)}to{transform:translateX(-50%) translateY(0)}
+
+@media(max-width:500px){#game-area{height:250px}#drunk{font-size:2rem}#launch-btn{font-size:1.5rem;padding:15px 30px}#multiplier{font-size:2.5rem}#cash-out-btn{font-size:1.2rem}}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+
+<div id="game-container">
+  <div>
+    <div class="title">🍺 Destinated Drunk</div>
+    <div class="sub">Launch the lush · Fly high · Don't crash!</div>
+  </div>
+
+  <div id="stats-bar">
+    <div class="stat-item"><div class="stat-lbl">💰 Money</div><div class="stat-val" id="money">$50.00</div></div>
+    <div class="stat-item"><div class="stat-lbl">🎯 Best</div><div class="stat-val" id="best">$0.00</div></div>
+    <div class="stat-item"><div class="stat-lbl">🏆 Total Won</div><div class="stat-val" id="total">$0.00</div></div>
+  </div>
+
+  <div id="game-area">
+    <div id="ground"></div>
+    <div id="trees"></div>
+    <div id="trailer"></div>
+    <div id="window"></div>
+    <div id="drunk">🍺</div>
+    <div id="flight-path"></div>
+    <div id="ui-overlay">
+      <div id="multiplier">1.00x</div>
+      <button id="cash-out-btn" onclick="cashOut()">💰 CASH OUT!</button>
+      <button id="launch-btn" onclick="launchDrunk()">🚀 LAUNCH!</button>
+    </div>
+  </div>
+
+  <div style="text-align:center;font-size:.85rem;color:var(--copper);margin:10px 0">
+    🎯 Get the highest multiplier before crashing into the tree! 🏠 Fly through the window for bonus! 🌳
+  </div>
+
+  <div style="display:flex;justify-content:center;gap:10px">
+    <button style="padding:12px 20px;background:var(--wood-l);border:2px solid var(--copper);border-radius:8px;color:var(--copper);font-size:.9rem;cursor:pointer" onclick="window.location.href='index.html'">🏠 Home</button>
+  </div>
+</div>
+
+<div id="crash-overlay">
+  <div id="crash-text">CRASH! 🌳💥</div>
+</div>
+
+<div id="result-screen">
+  <div class="result-title" id="result-title">Crashed!</div>
+  <div class="result-amount" id="result-amount">+$0.00</div>
+  <div style="display:flex;gap:10px;justify-content:center">
+    <button class="result-btn" onclick="playAgain()">🔄 Play Again</button>
+    <button class="result-btn" onclick="window.location.href='index.html'">🏠 Home</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const G = {
+  money: 50,
+  bet: 5,
+  bestWin: 0,
+  totalWon: 0,
+  flying: false,
+  multiplier: 1,
+  crashMultiplier: 1,
+  reserves: 70
+};
+
+// Physics
+let drunkX = 50;
+let drunkY = 240; // Ground level
+let velocityX = 0;
+let velocityY = 0;
+let gravity = 0.3;
+let airResistance = 0.98;
+let launchPower = 12;
+let maxHeight = 0;
+let flightTime = 0;
+let trailPoints = [];
+
+function init(){
+  load();
+  createTrees();
+  updateUI();
+}
+
+function load(){
+  const d = JSON.parse(localStorage.getItem('destinated_data') || '{}');
+  G.money = d.money || 50;
+  G.bestWin = d.bestWin || 0;
+  G.totalWon = d.totalWon || 0;
+}
+
+function save(){
+  localStorage.setItem('destinated_data', JSON.stringify({money:G.money,bestWin:G.bestWin,totalWon:G.totalWon}));
+}
+
+function createTrees(){
+  const trees = document.getElementById('trees');
+  for(let i=0; i<8; i++){
+    const tree = document.createElement('div');
+    tree.className = 'tree';
+    tree.textContent = '🌳';
+    tree.style.left = `${20 + i * 100}px`;
+    trees.appendChild(tree);
+  }
+}
+
+function launchDrunk(){
+  if(G.flying || G.money < G.bet) return;
+
+  G.flying = true;
+  G.money -= G.bet;
+  G.multiplier = 1;
+  G.crashMultiplier = 1;
+  maxHeight = drunkY;
+  flightTime = 0;
+  trailPoints = [];
+
+  // Launch physics
+  velocityX = Math.random() * 4 + 2; // Random horizontal velocity
+  velocityY = -launchPower - Math.random() * 3; // Upward velocity with variation
+
+  document.getElementById('launch-btn').style.display = 'none';
+  document.getElementById('cash-out-btn').style.display = 'block';
+  document.getElementById('multiplier').style.display = 'block';
+
+  updateUI();
+  fly();
+}
+
+function fly(){
+  if(!G.flying) return;
+
+  // Physics update
+  velocityY += gravity;
+  velocityX *= airResistance;
+  drunkX += velocityX;
+  drunkY += velocityY;
+  flightTime++;
+
+  // Update multiplier based on height and flight time
+  const heightBonus = Math.max(0, (240 - drunkY) / 50);
+  const timeBonus = flightTime / 20;
+  G.multiplier = 1 + heightBonus + timeBonus;
+
+  // Track max height for crash bonus
+  if(drunkY < maxHeight) maxHeight = drunkY;
+
+  // Add trail
+  if(flightTime % 3 === 0){
+    const trail = document.createElement('div');
+    trail.className = 'flight-trail';
+    trail.style.left = `${drunkX}px`;
+    trail.style.top = `${drunkY}px`;
+    document.getElementById('flight-path').appendChild(trail);
+    trailPoints.push(trail);
+    // Remove old trails
+    if(trailPoints.length > 20){
+      const oldTrail = trailPoints.shift();
+      oldTrail.remove();
+    }
+  }
+
+  // Update drunk position
+  const drunk = document.getElementById('drunk');
+  drunk.style.left = `${drunkX}px`;
+  drunk.style.top = `${drunkY}px`;
+
+  // Update multiplier display
+  document.getElementById('multiplier').textContent = G.multiplier.toFixed(2) + 'x';
+
+  // Check for crash
+  if(drunkY >= 240){ // Hit ground
+    crash();
+    return;
+  }
+
+  // Check tree collision
+  if(drunkX > 150 && drunkX < 400 && drunkY > 180 && drunkY < 240){
+    // Calculate crash multiplier based on how far they flew
+    G.crashMultiplier = Math.min(5, Math.max(1, (drunkX - 150) / 50));
+    windowCrash();
+    return;
+  }
+
+  requestAnimationFrame(fly);
+}
+
+function cashOut(){
+  if(!G.flying) return;
+
+  G.flying = false;
+  const win = G.bet * G.multiplier;
+
+  // Apply house edge
+  const houseWin = Math.floor(win * 0.9);
+  const safeWin = Math.min(houseWin, G.reserves);
+  G.reserves = Math.max(0, G.reserves - safeWin);
+  G.money += safeWin;
+  G.totalWon += safeWin;
+
+  if(safeWin > G.bestWin) G.bestWin = safeWin;
+
+  showResult('Cashed Out!', safeWin);
+  resetGame();
+}
+
+function crash(){
+  G.flying = false;
+  document.getElementById('crash-overlay').style.display = 'flex';
+  setTimeout(() => {
+    document.getElementById('crash-overlay').style.display = 'none';
+    showResult('Crashed!', 0);
+    resetGame();
+  }, 1000);
+}
+
+function windowCrash(){
+  G.flying = false;
+  // Bonus multiplier for flying through window
+  const baseWin = G.bet * G.multiplier * G.crashMultiplier;
+  const houseWin = Math.floor(baseWin * 0.85); // Higher house edge for crashes
+  const safeWin = Math.min(houseWin, G.reserves);
+  G.reserves = Math.max(0, G.reserves - safeWin);
+  G.money += safeWin;
+  G.totalWon += safeWin;
+
+  if(safeWin > G.bestWin) G.bestWin = safeWin;
+
+  document.getElementById('crash-overlay').style.display = 'flex';
+  document.getElementById('crash-text').textContent = 'WINDOW CRASH! 🏠💥';
+  setTimeout(() => {
+    document.getElementById('crash-overlay').style.display = 'none';
+    showResult('Window Crash Bonus!', safeWin);
+    resetGame();
+  }, 1500);
+}
+
+function showResult(title, amount){
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-amount').textContent = `$${amount.toFixed(2)}`;
+  document.getElementById('result-screen').style.display = 'block';
+}
+
+function playAgain(){
+  document.getElementById('result-screen').style.display = 'none';
+  resetGame();
+}
+
+function resetGame(){
+  G.flying = false;
+  drunkX = 50;
+  drunkY = 240;
+  velocityX = 0;
+  velocityY = 0;
+  flightTime = 0;
+
+  // Clear trails
+  document.getElementById('flight-path').innerHTML = '';
+
+  // Reset UI
+  document.getElementById('launch-btn').style.display = 'block';
+  document.getElementById('cash-out-btn').style.display = 'none';
+  document.getElementById('multiplier').style.display = 'none';
+
+  // Reset drunk position
+  const drunk = document.getElementById('drunk');
+  drunk.style.left = `${drunkX}px`;
+  drunk.style.top = `${drunkY}px`;
+
+  updateUI();
+  save();
+}
+
+function updateUI(){
+  document.getElementById('money').textContent = `$${G.money.toFixed(2)}`;
+  document.getElementById('best').textContent = `$${G.bestWin.toFixed(2)}`;
+  document.getElementById('total').textContent = `$${G.totalWon.toFixed(2)}`;
+}
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+init();
+</script>
+</body>
+</html>
