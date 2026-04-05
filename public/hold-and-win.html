@@ -253,6 +253,12 @@ function spin(){
   }
   G.spinning = true;
   el('spin-btn').disabled = true;
+
+  // Random hillbilly taunt
+  if(Math.random() < 0.3){
+    const taunts = ["Imma get ya!", "Yer mine now!", "Chasin' ya down!", "Don't run, sista!"];
+    toast(taunts[Math.floor(Math.random() * taunts.length)] + " 🏃‍♂️");
+  }
   
   G.beerMoney -= G.bet;
   G.score += Math.floor(G.bet);
