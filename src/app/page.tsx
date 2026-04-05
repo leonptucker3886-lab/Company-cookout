@@ -1,12 +1,18 @@
 export default function Home() {
   return (
-    <div style={{ background: '#0c0400', fontFamily: 'Oswald, sans-serif', color: '#FFF8DC', minHeight: '100vh', overflowX: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+    <>
+      <style jsx global>{`
+        @keyframes icon-bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+        .enter-btn:hover { transform: translateY(-2px); box-shadow: 0 0 42px rgba(255,100,0,.55), 0 7px 0 #880000; }
+        .enter-btn:active { transform: translateY(3px); box-shadow: 0 0 14px rgba(255,100,0,.35), 0 2px 0 #880000; }
+      `}</style>
+      <div style={{ background: '#0c0400', fontFamily: 'Oswald, sans-serif', color: '#FFF8DC', minHeight: '100vh', overflowX: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
       <div id="landing" style={{ maxWidth: '800px', width: '100%', padding: '20px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <div className="logo-wrap" style={{ textAlign: 'center' }}>
           <div className="ccg-logo" style={{ position: 'relative', display: 'inline-block' }}>
             <div className="logo-badge" style={{ width: 'clamp(200px,50vw,275px)', height: 'clamp(200px,50vw,275px)', borderRadius: '50%', background: 'radial-gradient(circle at 40% 38%, #5C3318 0%, #2d1000 55%, #0d0400 100%)', border: '5px solid #B87333', boxShadow: '0 0 0 3px rgba(184,115,51,.25), 0 0 50px rgba(255,107,26,.3), 0 0 100px rgba(255,70,0,.15), inset 0 2px 0 rgba(255,255,255,.06)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '6px', position: 'relative', overflow: 'hidden' }}>
               <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'radial-gradient(circle at 50% 0%, rgba(255,200,50,.08) 0%, transparent 60%)' }}></div>
-              <div className="logo-icons" style={{ fontSize: 'clamp(2rem,6vw,2.8rem)', lineHeight: 1, letterSpacing: '4px', animation: 'icon-bob 3s ease-in-out infinite' }}>🔥🐷🍺</div>
+              <div style={{ fontSize: 'clamp(2rem,6vw,2.8rem)', lineHeight: 1, letterSpacing: '4px', animation: 'icon-bob 3s ease-in-out infinite' }}>🔥🐷🍺</div>
               <div className="logo-txt-inner" style={{ fontFamily: 'Rye, cursive', fontSize: 'clamp(.75rem,2.5vw,1rem)', color: '#FFD700', textShadow: '0 0 12px rgba(255,215,0,.5)', letterSpacing: '3px', textAlign: 'center', lineHeight: '1.3' }}>
                 Company Cookout
                 <span style={{ display: 'block', fontSize: '.65em', color: '#D4894E', letterSpacing: '4px' }}>Gaming</span>
@@ -29,7 +35,6 @@ export default function Home() {
         </div>
 
         <button
-          className="enter-btn"
           onClick={() => window.location.href = 'games.html'}
           style={{
             padding: '20px 40px',
@@ -52,6 +57,6 @@ export default function Home() {
           Pig Pit Edition
         </div>
       </div>
-    </div>
+    </>
   )
 }
