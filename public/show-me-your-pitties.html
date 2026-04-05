@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐕 Show Me Your Pitties</title>
+<link href="https://fonts.googleapis.com/css2?family=Rye&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0500;--wood:#1a1008;--wood-l:#2a1a0a;--copper:#B87333;
+  --sun:#FFD700;--cream:#FFF8DC;--fire:#FF3300;--brown:#8B4513;--tan:#D2B48C;
+}
+body{background:var(--bg);font-family:'Oswald',sans-serif;color:var(--cream);min-height:100vh;overflow-x:hidden}
+#bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 50% 100%,rgba(139,69,19,.3) 0%,transparent 50%),linear-gradient(180deg,#0a0500,#1a0800,#2a1500)}
+#dog-bg{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:300px;height:200px;opacity:.1;z-index:1;background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="80" font-size="60" fill="%23D2B48C">🐕</text></svg>') no-repeat center}
+
+#app{max-width:500px;margin:0 auto;padding:15px;position:relative;z-index:10;display:flex;flex-direction:column;gap:12px}
+.title{font-family:'Rye',cursive;font-size:2.4rem;color:var(--sun);text-align:center;text-shadow:0 0 25px rgba(255,215,0,.6),3px 3px 0 var(--fire)}
+.sub{font-size:.6rem;color:var(--copper);text-align:center;letter-spacing:3px;text-transform:uppercase}
+
+#curr-bar{background:linear-gradient(135deg,rgba(30,18,8,.95),rgba(50,30,15,.95));border:2px solid var(--copper);border-radius:12px;padding:12px;display:flex;justify-content:space-between}
+.curr-lbl{font-size:.45rem;color:var(--copper);text-transform:uppercase;letter-spacing:2px}
+.curr-val{font-size:1.1rem;font-weight:700;color:var(--sun)}
+
+#show-area{background:linear-gradient(180deg,var(--wood),#1a1008);border:4px solid var(--copper);border-radius:16px;padding:15px;text-align:center;position:relative;overflow:hidden}
+#pitbull-display{margin:20px 0;font-size:6rem;animation:bounce 2s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.pitbull-name{font-family:'Rye',cursive;font-size:1.8rem;color:var(--sun);margin:10px 0;text-shadow:0 0 15px rgba(255,215,0,.5)}
+.pitbull-stats{display:flex;justify-content:center;gap:15px;margin:15px 0}
+.stat-item{text-align:center}
+.stat-lbl{font-size:.6rem;color:var(--copper);text-transform:uppercase;letter-spacing:1px}
+.stat-val{font-size:1.2rem;font-weight:700;color:var(--sun)}
+
+#judges{display:flex;justify-content:center;gap:10px;margin:15px 0}
+.judge{opacity:.6;font-size:1.8rem;transition:opacity .3s}
+.judge.active{opacity:1;animation:judge-bounce .5s}
+@keyframes judge-bounce{0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
+
+#controls{display:flex;flex-direction:column;gap:10px}
+.btn{background:linear-gradient(180deg,#FF9500,#CC3300);border:2px solid var(--sun);border-radius:25px;padding:12px 28px;color:var(--cream);font-family:'Rye',cursive;font-size:1rem;cursor:pointer;box-shadow:0 4px 0 #800;transition:all .1s}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 0 #800}
+.btn:active:not(:disabled){transform:translateY(2px);box-shadow:0 2px 0 #800}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-row{display:flex;gap:8px;justify-content:center}
+
+#result{text-align:center;min-height:50px;margin:10px 0}
+.result-txt{font-family:'Rye',cursive;font-size:1.5rem;color:var(--sun)}
+.result-sub{font-size:.8rem;color:var(--copper);margin-top:5px}
+
+#leaderboard{background:rgba(0,0,0,.4);border:2px solid var(--copper);border-radius:10px;padding:12px;margin:10px 0}
+.lb-title{font-size:.8rem;color:var(--copper);text-transform:uppercase;letter-spacing:2px;text-align:center;margin-bottom:8px}
+.lb-entry{display:flex;justify-content:space-between;font-size:.7rem;margin:3px 0}
+.lb-name{color:var(--cream)}
+.lb-score{color:var(--sun);font-weight:700}
+
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(28,15,5,.97);border:2px solid var(--copper);border-radius:10px;padding:12px 24px;color:var(--sun);z-index:200;display:none}
+#toast.show{display:block;animation:toast-in .3s}
+@keyframes toast-in{from{transform:translateX(-50%) translateY(20px)}to{transform:translateX(-50%) translateY(0)}
+
+@media(max-width:450px){#pitbull-display{font-size:4rem}.title{font-size:2rem}}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<div id="dog-bg"></div>
+
+<div id="app">
+  <div>
+    <div class="title">🐕 Show Me Your Pitties</div>
+    <div class="sub">Pitbull Showcase Competition</div>
+  </div>
+
+  <div id="curr-bar">
+    <div><div class="curr-lbl">💰 Beer Money</div><div class="curr-val" id="bm">$50</div></div>
+    <div><div class="curr-lbl">🏆 Score</div><div class="curr-val" id="score">0</div></div>
+    <div><div class="curr-lbl">🐕 Best Pittie</div><div class="curr-val" id="best-score">0</div></div>
+  </div>
+
+  <div id="show-area">
+    <div id="pitbull-display">🐕</div>
+    <div class="pitbull-name" id="pitbull-name">Buddy</div>
+    <div class="pitbull-stats">
+      <div class="stat-item">
+        <div class="stat-lbl">Strength</div>
+        <div class="stat-val" id="strength">8</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-lbl">Speed</div>
+        <div class="stat-val" id="speed">7</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-lbl">Looks</div>
+        <div class="stat-val" id="looks">9</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-lbl">Attitude</div>
+        <div class="stat-val" id="attitude">6</div>
+      </div>
+    </div>
+
+    <div id="judges">
+      <div class="judge" id="judge1">👩‍⚖️</div>
+      <div class="judge" id="judge2">👨‍⚖️</div>
+      <div class="judge" id="judge3">👩‍⚖️</div>
+      <div class="judge" id="judge4">👨‍⚖️</div>
+      <div class="judge" id="judge5">👩‍⚖️</div>
+    </div>
+  </div>
+
+  <div id="controls">
+    <div class="btn-row">
+      <button class="btn" id="show-btn" onclick="showPitbull()">🐕 SHOW PITBULL</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn" onclick="window.location.href='index.html'">🏠 Home</button>
+    </div>
+  </div>
+
+  <div id="result">
+    <div class="result-txt" id="result-txt">Click SHOW PITBULL to start!</div>
+    <div class="result-sub" id="result-sub">Show off your pitbulls to win prizes!</div>
+  </div>
+
+  <div id="leaderboard">
+    <div class="lb-title">Top Pitties</div>
+    <div id="lb-entries"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const PITBULLS = [
+  { name: 'Rex', emoji: '🐕', strength: 9, speed: 6, looks: 7, attitude: 8 },
+  { name: 'Bella', emoji: '🐕', strength: 7, speed: 8, looks: 9, attitude: 6 },
+  { name: 'Rocky', emoji: '🐕', strength: 10, speed: 5, looks: 6, attitude: 9 },
+  { name: 'Luna', emoji: '🐕', strength: 6, speed: 9, looks: 10, attitude: 5 },
+  { name: 'Bruno', emoji: '🐕', strength: 8, speed: 7, looks: 8, attitude: 7 },
+  { name: 'Sadie', emoji: '🐕', strength: 5, speed: 10, looks: 9, attitude: 6 },
+  { name: 'Titan', emoji: '🐕', strength: 9, speed: 4, looks: 5, attitude: 10 },
+  { name: 'Coco', emoji: '🐕', strength: 7, speed: 8, looks: 10, attitude: 5 },
+  { name: 'Zeus', emoji: '🐕', strength: 10, speed: 6, looks: 7, attitude: 7 },
+  { name: 'Ruby', emoji: '🐕', strength: 6, speed: 7, looks: 9, attitude: 8 }
+];
+
+const G = { beerMoney: 50, score: 0, bestScore: 0, currentPitbull: null, reserves: 65 };
+
+function init(){
+  load();
+  refreshUI();
+  updateLeaderboard();
+}
+
+function load(){
+  const d = JSON.parse(localStorage.getItem('pitties_data') || '{}');
+  G.beerMoney = d.beerMoney || 50;
+  G.score = d.score || 0;
+  G.bestScore = d.bestScore || 0;
+}
+
+function save(){
+  localStorage.setItem('pitties_data', JSON.stringify({beerMoney:G.beerMoney,score:G.score,bestScore:G.bestScore}));
+}
+
+function showPitbull(){
+  if(G.beerMoney < 5){
+    toast('Not enough Beer Money! Need $5 to show a pitbull!');
+    return;
+  }
+
+  G.beerMoney -= 5;
+  refreshUI();
+
+  // Pick random pitbull
+  G.currentPitbull = PITBULLS[Math.floor(Math.random() * PITBULLS.length)];
+
+  // Update display
+  document.getElementById('pitbull-display').textContent = G.currentPitbull.emoji;
+  document.getElementById('pitbull-name').textContent = G.currentPitbull.name;
+  document.getElementById('strength').textContent = G.currentPitbull.strength;
+  document.getElementById('speed').textContent = G.currentPitbull.speed;
+  document.getElementById('looks').textContent = G.currentPitbull.looks;
+  document.getElementById('attitude').textContent = G.currentPitbull.attitude;
+
+  // Judge animation
+  const judges = document.querySelectorAll('.judge');
+  judges.forEach((judge, i) => {
+    setTimeout(() => {
+      judge.classList.add('active');
+      setTimeout(() => judge.classList.remove('active'), 500);
+    }, i * 200);
+  });
+
+  // Calculate score
+  setTimeout(() => {
+    const totalScore = G.currentPitbull.strength + G.currentPitbull.speed + G.currentPitbull.looks + G.currentPitbull.attitude;
+    const judgesScore = Math.floor(Math.random() * 20) + 10; // 10-30
+    const finalScore = totalScore + judgesScore;
+
+    G.score += finalScore;
+    if(finalScore > G.bestScore) G.bestScore = finalScore;
+
+    // Apply house edge and protection
+    const houseEdge = Math.floor(finalScore * 0.85); // 15% house edge
+    const maxPay = G.reserves + 15;
+    const safeWin = houseEdge > maxPay ? maxPay : houseEdge;
+    G.reserves = Math.max(0, G.reserves - safeWin);
+
+    G.beerMoney += safeWin;
+
+    // Results
+    let result = 'Decent showing!';
+    let prize = safeWin;
+    if(finalScore >= 40) result = '🏆 CHAMPION! Best in Show!';
+    else if(finalScore >= 35) result = '🥈 Runner Up!';
+    else if(finalScore >= 30) result = '🥉 Third Place!';
+    else if(finalScore >= 25) result = 'Honorable Mention!';
+    else if(finalScore < 20) result = 'Better luck next time!';
+
+    document.getElementById('result-txt').textContent = `${result} +$${prize}`;
+    document.getElementById('result-sub').textContent = `Score: ${finalScore} (${G.currentPitbull.name} is a keeper!)`;
+
+    toast(`Showed ${G.currentPitbull.name}! +$${prize} 🐕`);
+
+    refreshUI();
+    save();
+    updateLeaderboard();
+
+    if(G.reserves < 25) toast('House reserves getting low!', 4000);
+  }, 1500);
+}
+
+function updateLeaderboard(){
+  const lb = document.getElementById('lb-entries');
+  lb.innerHTML = '';
+
+  // Sort by score
+  const sorted = PITBULLS.slice().sort((a,b) => {
+    const scoreA = a.strength + a.speed + a.looks + a.attitude;
+    const scoreB = b.strength + b.speed + b.looks + b.attitude;
+    return scoreB - scoreA;
+  });
+
+  sorted.slice(0, 5).forEach(pit => {
+    const score = pit.strength + pit.speed + pit.looks + pit.attitude;
+    lb.innerHTML += `<div class="lb-entry"><span class="lb-name">${pit.name}</span><span class="lb-score">${score}</span></div>`;
+  });
+}
+
+function refreshUI(){
+  document.getElementById('bm').textContent = '$' + G.beerMoney;
+  document.getElementById('score').textContent = G.score;
+  document.getElementById('best-score').textContent = G.bestScore;
+}
+
+let tt;
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(tt);
+  tt = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+init();
+</script>
+</body>
+</html>
