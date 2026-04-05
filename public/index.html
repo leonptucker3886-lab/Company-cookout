@@ -69,16 +69,11 @@ html,body{min-height:100%;background:var(--bg-gradient);font-family:'Inter','SF 
 .logo-glow{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(255,150,0,.06) 0%,transparent 70%);animation:badge-pulse 2.5s ease-in-out infinite}
 @keyframes badge-pulse{0%,100%{opacity:.5}50%{opacity:1}}
 
-.main-title{font-family:'Inter','SF Pro Display',sans-serif;font-size:clamp(2rem,8vw,4rem);font-weight:800;color:var(--cream);
-  text-align:center;text-shadow:0 4px 8px rgba(0,0,0,.5);letter-spacing:-.02em;line-height:1.1;background:linear-gradient(135deg,var(--gold),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.main-sub{font-size:clamp(.7rem,2.5vw,.9rem);color:var(--copper);letter-spacing:5px;
-  text-transform:uppercase;text-align:center;opacity:.75}
-
-.enter-btn{padding:20px 40px;background:linear-gradient(135deg,var(--accent),var(--gold));border:2px solid var(--gold);border-radius:12px;color:var(--primary);font-family:'Inter',sans-serif;font-size:clamp(1rem,3vw,1.2rem);font-weight:600;letter-spacing:1px;cursor:pointer;box-shadow:var(--shadow);transition:all .3s cubic-bezier(0.4,0,0.2,1);position:relative;overflow:hidden}
-
-
-.enter-btn:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(0,0,0,.4);background:linear-gradient(135deg,var(--gold),var(--accent))}
-.enter-btn:active{transform:translateY(0);box-shadow:var(--shadow)}
+.presents{font-size:clamp(.8rem,3vw,1.2rem);color:var(--copper);letter-spacing:3px;text-transform:uppercase;text-align:center;margin-bottom:1rem;font-weight:500}
+.sun-fence{position:relative;width:clamp(200px,50vw,300px);height:clamp(120px,30vw,180px);margin:0 auto;cursor:pointer;border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.4);transition:transform .3s ease}
+.sun-fence:hover{transform:translateY(-4px)}
+.fence-bg{position:absolute;inset:0;background:linear-gradient(135deg,#8B4513,#D2691E,#A0522D,#8B4513);background-image:repeating-linear-gradient(90deg,transparent,transparent 10px,rgba(139,69,19,.3) 10px,rgba(139,69,19,.3) 12px),repeating-linear-gradient(0deg,transparent,transparent 20px,rgba(160,82,45,.2) 20px,rgba(160,82,45,.2) 22px)}
+.fence-title{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Rye',cursive;font-size:clamp(2rem,8vw,3rem);color:var(--sun);text-shadow:0 0 20px rgba(255,215,0,.8),2px 2px 0 var(--fire),4px 4px 0 #600;letter-spacing:2px;text-align:center}
 .tagline{font-size:clamp(.7rem,2vw,.85rem);color:var(--accent);letter-spacing:1px;text-align:center;font-weight:500;opacity:.8}
 
 /* ── PAGE 2: ABOUT ── */
@@ -262,11 +257,12 @@ html,body{min-height:100%;background:var(--bg-gradient);font-family:'Inter','SF 
   </div>
 
   <div>
-    <div class="main-title">Sun N Fun<br>Slots</div>
-    <div class="main-sub">Kick the Pig</div>
+    <div class="presents">Company Cookout presents</div>
+    <div class="sun-fence" onclick="window.location.href='games.html'">
+      <div class="fence-bg"></div>
+      <div class="fence-title">Sun N Fun</div>
+    </div>
   </div>
-
-  <button class="enter-btn" onclick="window.location.href='games.html'">🎰 ENTER CASINO 🎰</button>
   <div class="tagline">Premium Gaming Experience · Mobile Optimized</div>
 </div>
 
