@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🍺 Cold One Hold & Win</title>
+<link href="https://fonts.googleapis.com/css2?family=Rye&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0400;--wood:#1C0F05;--wood-l:#3A200A;--copper:#B87333;
+  --sun:#FFD700;--cream:#FFF8DC;--fire:#FF3300;--green:#39FF14;
+}
+body{background:var(--bg);font-family:'Oswald',sans-serif;color:var(--cream);min-height:100vh;overflow-x:hidden}
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:rgba(0,0,0,.3)}::-webkit-scrollbar-thumb{background:var(--copper);border-radius:3px}
+#bg{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse at 50% 100%,rgba(255,80,0,.3) 0%,transparent 50%),linear-gradient(180deg,#0c0400,#1a0800,#2d1000)}
+#embers{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.ember{position:absolute;bottom:3%;border-radius:50%;animation:rise linear infinite}
+@keyframes rise{0%{opacity:1;transform:translateY(0) translateX(0)}70%{opacity:.5}100%{opacity:0;transform:translateY(-60vh) translateX(var(--dx))}}
+.flame{position:fixed;bottom:0;width:60px;height:120px;pointer-events:none;z-index:2;opacity:.4}
+.flame.l{left:0}.flame.r{right:0}
+.flame::before{content:'';position:absolute;bottom:0;left:15px;width:30px;height:80px;background:radial-gradient(ellipse,rgba(255,140,0,.5),transparent);border-radius:50% 50% 30% 30%;animation:flicker .8s ease-in-out infinite alternate}
+@keyframes flicker{from{transform:scaleY(1)}to{transform:scaleY(.85)}}
+
+#app{max-width:480px;margin:0 auto;padding:15px;position:relative;z-index:10;display:flex;flex-direction:column;gap:12px}
+.title{font-family:'Rye',cursive;font-size:2.2rem;color:var(--sun);text-align:center;text-shadow:0 0 20px rgba(255,215,0,.5),2px 2px 0 var(--fire)}
+.sub{font-size:.65rem;color:var(--copper);text-align:center;letter-spacing:3px;text-transform:uppercase}
+
+#curr-bar{background:linear-gradient(135deg,rgba(28,15,5,.95),rgba(58,32,10,.95));border:2px solid var(--copper);border-radius:12px;padding:12px;display:flex;justify-content:space-between;align-items:center}
+.curr-item{display:flex;flex-direction:column;align-items:center}
+.curr-lbl{font-size:.5rem;color:var(--copper);letter-spacing:2px;text-transform:uppercase}
+.curr-val{font-size:1.2rem;font-weight:700;color:var(--sun)}
+#uname{font-size:.7rem;color:var(--copper)}
+
+#grid{background:linear-gradient(180deg,var(--wood),#200e00);border:3px solid var(--copper);border-radius:14px;padding:8px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.cell{aspect-ratio:1;background:rgba(0,0,0,.5);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:2rem;position:relative;cursor:pointer;transition:transform .1s}
+.cell:active{transform:scale(.95)}
+.cell.hold{border:3px solid var(--sun);box-shadow:0 0 15px rgba(255,215,0,.5)}
+.cell.hold::after{content:'★';position:absolute;top:2px;font-size:.7rem;color:var(--sun)}
+.cell.gold{animation:gold-pulse .5s}
+@keyframes gold-pulse{0%{transform:scale(1)}50%{transform:scale(1.1);background:rgba(255,215,0,.3)}100%{transform:scale(1)}}
+.cell.jackpot{background:linear-gradient(135deg,rgba(255,0,0,.4),rgba(100,0,0,.4));border:2px solid #ff4444}
+
+#respin-bar{background:rgba(0,0,0,.6);border:2px solid var(--copper);border-radius:10px;padding:10px;text-align:center;min-height:50px;display:flex;align-items:center;justify-content:center;gap:10px}
+.respin-count{font-size:1.5rem;font-weight:700;color:var(--sun);font-family:'Rye',cursive}
+.respin-label{font-size:.65rem;color:var(--copper);text-transform:uppercase;letter-spacing:2px}
+
+#controls{display:flex;flex-direction:column;gap:10px}
+.btn-row{display:flex;gap:8px;justify-content:center}
+.btn{background:linear-gradient(180deg,#FF9500,#CC2000);border:2px solid var(--sun);border-radius:25px;padding:12px 24px;color:var(--cream);font-family:'Rye',cursive;font-size:1rem;cursor:pointer;box-shadow:0 4px 0 #800;transition:all .1s}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 0 #800}
+.btn:active:not(:disabled){transform:translateY(2px);box-shadow:0 2px 0 #800}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.bet-ctrl{display:flex;align-items:center;gap:8px}
+.bet-btn{width:30px;height:30px;border-radius:6px;background:var(--wood-l);border:2px solid var(--copper);color:var(--sun);font-weight:700;cursor:pointer}
+.bet-btn:hover{background:var(--wood)}
+#bet-disp{background:rgba(0,0,0,.5);border:2px solid var(--copper);border-radius:8px;padding:6px 16px;color:var(--sun);font-weight:700;min-width:80px;text-align:center}
+
+#msg{background:rgba(0,0,0,.4);border:1px solid var(--copper);border-radius:8px;padding:10px;text-align:center;font-size:.85rem;color:var(--cream)}
+
+#bonus-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:100;display:none;align-items:center;justify-content:center;flex-direction:column;gap:20px}
+#bonus-overlay.show{display:flex}
+.bonus-title{font-family:'Rye',cursive;font-size:3rem;color:var(--sun);text-shadow:0 0 40px rgba(255,215,0,.8)}
+.bonus-amt{font-size:4rem;font-weight:700;color:var(--green);font-family:'Rye',cursive}
+.bonus-btn{padding:15px 50px;background:var(--green);border:3px solid #fff;border-radius:30px;color:#000;font-family:'Rye',cursive;font-size:1.5rem;cursor:pointer}
+
+#nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.nav-btn{padding:8px 16px;background:linear-gradient(135deg,var(--wood-l),var(--wood));border:2px solid var(--copper);border-radius:8px;color:var(--copper);font-size:.7rem;cursor:pointer;text-transform:uppercase;letter-spacing:1px}
+.nav-btn:hover{border-color:var(--sun);color:var(--sun)}
+
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(28,15,5,.97);border:2px solid var(--copper);border-radius:10px;padding:12px 24px;color:var(--sun);z-index:200;display:none;font-size:.9rem}
+#toast.show{display:block;animation:toast-in .3s}
+@keyframes toast-in{from{transform:translateX(-50%) translateY(20px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
+
+@media(max-width:400px){.cell{font-size:1.6rem}#grid{gap:4px}}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<div id="embers"></div>
+<div class="flame l"></div>
+<div class="flame r"></div>
+
+<div id="app">
+  <div>
+    <div class="title">🍺 Cold One Hold & Win</div>
+    <div class="sub">Collect Coins · Hold to Win</div>
+  </div>
+
+  <div id="curr-bar">
+    <div class="curr-item">
+      <div class="curr-lbl">💰 Beer Money</div>
+      <div class="curr-val" id="bm">50.00</div>
+    </div>
+    <div>
+      <div id="uname">👤 Guest</div>
+    </div>
+    <div class="curr-item">
+      <div class="curr-lbl">🎯 Score</div>
+      <div class="curr-val" id="score">0</div>
+    </div>
+  </div>
+
+  <div id="respin-bar" style="display:none">
+    <span class="respin-count" id="respin-num">3</span>
+    <span class="respin-label">Respins Left!</span>
+  </div>
+
+  <div id="grid"></div>
+
+  <div id="controls">
+    <div class="btn-row bet-ctrl">
+      <span style="color:var(--copper);font-size:.7rem;letter-spacing:2px">BET</span>
+      <button class="bet-btn" onclick="adjBet(-1)">−</button>
+      <div id="bet-disp">$5.00</div>
+      <button class="bet-btn" onclick="adjBet(1)">+</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn" id="spin-btn" onclick="spin()">🎰 SPIN 🎰</button>
+    </div>
+  </div>
+
+  <div id="msg">Spin to land coins! Hold coins to win! 🍺</div>
+
+  <div id="nav">
+    <button class="nav-btn" onclick="window.location.href='index.html'">🏠 Home</button>
+    <button class="nav-btn" onclick="openPayout()">📋 Payout</button>
+  </div>
+</div>
+
+<div id="bonus-overlay">
+  <div class="bonus-title">🎉 HOLD & WIN!</div>
+  <div class="bonus-amt" id="bonus-amt">$0</div>
+  <button class="bonus-btn" onclick="closeBonus()">CLAIM!</button>
+</div>
+
+<div id="payout-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:150;align-items:center;justify-content:center">
+  <div style="background:linear-gradient(180deg,var(--wood-l),var(--wood));border:3px solid var(--copper);border-radius:20px;padding:25px;max-width:350px;width:90%">
+    <div style="font-family:'Rye',cursive;font-size:1.5rem;color:var(--sun);text-align:center;margin-bottom:15px">📋 Payouts</div>
+    <div style="color:var(--cream);font-size:.85rem;line-height:2">
+      <div>🪙 Coin · $1-5 random</div>
+      <div>⭐ Star · $10</div>
+      <div>💎 Diamond · $25</div>
+      <div>🏆 Jackpot · $500 (rare)</div>
+      <div style="margin-top:10px;color:var(--copper)">Hold coins with ★ to keep them for next spin!</div>
+    </div>
+    <button onclick="document.getElementById('payout-modal').style.display='none'" style="width:100%;margin-top:15px;padding:10px;background:var(--copper);border:none;border-radius:8px;color:var(--wood);font-weight:700">CLOSE</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const SYMS = [
+  { id:'coin1', e:'🪙', v:1, w:35 },
+  { id:'coin2', e:'🪙', v:2, w:25 },
+  { id:'coin3', e:'🪙', v:3, w:20 },
+  { id:'star',  e:'⭐', v:10, w:10 },
+  { id:'diamond',e:'💎',v:25,w:7 },
+  { id:'jackpot',e:'🏆',v:500,w:3 }
+];
+const POOL = [];
+SYMS.forEach(s => { for(let i=0;i<s.w;i++) POOL.push(s); });
+
+const G = { bet:5, spinning:false, held:[], respins:0, beerMoney:50, score:0, user:'Guest' };
+const GRID_SIZE = 25;
+
+const el = id => document.getElementById(id);
+const rnd = () => POOL[Math.floor(Math.random()*POOL.length)];
+
+function init(){
+  load();
+  renderGrid();
+  spawnEmbers();
+  refreshUI();
+}
+
+function load(){
+  const saved = localStorage.getItem('holdwin_data');
+  if(saved){
+    const d = JSON.parse(saved);
+    G.beerMoney = d.beerMoney || 50;
+    G.score = d.score || 0;
+    G.user = d.user || 'Guest';
+    el('uname').textContent = '👤 ' + G.user;
+  }
+}
+
+function save(){
+  localStorage.setItem('holdwin_data', JSON.stringify({beerMoney:G.beerMoney,score:G.score,user:G.user}));
+}
+
+function renderGrid(){
+  const grid = el('grid');
+  grid.innerHTML = '';
+  for(let i=0;i<GRID_SIZE;i++){
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    cell.id = 'c'+i;
+    cell.onclick = () => toggleHold(i);
+    grid.appendChild(cell);
+  }
+}
+
+function spawnEmbers(){
+  const con = el('embers');
+  for(let i=0;i<15;i++){
+    const e = document.createElement('div');
+    e.className = 'ember';
+    const sz = 2+Math.random()*4;
+    e.style.cssText = `left:${5+Math.random()*90}%;width:${sz}px;height:${sz}px;background:rgba(255,130,0,.8);--dx:${(Math.random()-.5)*80}px;animation-duration:${3+Math.random()*4}s;animation-delay:-${Math.random()*5}s`;
+    con.appendChild(e);
+  }
+}
+
+function toggleHold(i){
+  if(G.spinning || G.respins > 0) return;
+  const cell = el('c'+i);
+  if(!cell.dataset.sym) return;
+  cell.classList.toggle('hold');
+}
+
+function spin(){
+  if(G.spinning) return;
+  if(G.beerMoney < G.bet){
+    toast('Not enough Beer Money! 🍺'); return;
+  }
+  G.spinning = true;
+  el('spin-btn').disabled = true;
+  
+  G.beerMoney -= G.bet;
+  G.score += Math.floor(G.bet);
+  
+  // Clear old grid but keep held
+  for(let i=0;i<GRID_SIZE;i++){
+    const cell = el('c'+i);
+    if(!cell.classList.contains('hold')){
+      cell.className = 'cell';
+      cell.innerHTML = '';
+      delete cell.dataset.sym;
+    }
+  }
+  
+  // Spin animation
+  let spins = 0;
+  const spinInt = setInterval(() => {
+    for(let i=0;i<GRID_SIZE;i++){
+      if(!el('c'+i).classList.contains('hold')){
+        const s = rnd();
+        el('c'+i).innerHTML = s.e;
+      }
+    }
+    spins++;
+    if(spins >= 10){
+      clearInterval(spinInt);
+      finalizeSpin();
+    }
+  }, 80);
+}
+
+function finalizeSpin(){
+  let heldCount = 0;
+  let coinTotal = 0;
+  let hasJackpot = false;
+  
+  // Generate final symbols
+  for(let i=0;i<GRID_SIZE;i++){
+    const cell = el('c'+i);
+    if(cell.classList.contains('hold')){
+      heldCount++;
+      if(cell.dataset.sym){
+        const s = SYMS.find(s => s.id === cell.dataset.sym);
+        if(s) coinTotal += s.v;
+        if(s && s.id === 'jackpot') hasJackpot = true;
+      }
+    }else{
+      const s = rnd();
+      cell.innerHTML = s.e;
+      cell.dataset.sym = s.id;
+      if(s.id === 'jackpot'){
+        cell.classList.add('jackpot');
+        cell.classList.add('gold');
+      }
+    }
+  }
+  
+  // Check hold & win
+  if(heldCount >= 3 || hasJackpot){
+    startRespins(coinTotal);
+  }else{
+    // Regular win from coins
+    if(coinTotal > 0){
+      G.beerMoney += coinTotal;
+      G.score += coinTotal * 10;
+      toast(`+$${coinTotal.toFixed(2)} from coins! 🪙`);
+    }
+  }
+  
+  refreshUI();
+  save();
+  G.spinning = false;
+  el('spin-btn').disabled = false;
+}
+
+function startRespins(initialWin){
+  G.respins = 3;
+  el('respin-bar').style.display = 'flex';
+  el('respin-num').textContent = G.respins;
+  toast('🎉 HOLD & WIN STARTED! 🎉');
+  
+  if(initialWin > 0){
+    G.beerMoney += initialWin;
+    G.score += initialWin * 10;
+  }
+  
+  runRespin();
+}
+
+function runRespin(){
+  if(G.respins <= 0){
+    endRespins();
+    return;
+  }
+  
+  G.respins--;
+  el('respin-num').textContent = G.respins;
+  
+  // Clear non-held and add new
+  let newWins = 0;
+  for(let i=0;i<GRID_SIZE;i++){
+    const cell = el('c'+i);
+    if(!cell.classList.contains('hold')){
+      const s = rnd();
+      cell.innerHTML = s.e;
+      cell.dataset.sym = s.id;
+      cell.classList.remove('gold');
+      if(s.id === 'jackpot'){
+        cell.classList.add('jackpot');
+        cell.classList.add('gold');
+        newWins += 500;
+      }else if(s.id !== 'coin1' && s.id !== 'coin2' && s.id !== 'coin3'){
+        // Keep high value
+        cell.classList.add('hold');
+      }else{
+        // Sometimes hold coins
+        if(Math.random() < .4) cell.classList.add('hold');
+      }
+    }
+  }
+  
+  if(newWins > 0){
+    G.beerMoney += newWins;
+    G.score += newWins * 10;
+  }
+  
+  refreshUI();
+  save();
+  
+  setTimeout(runRespin, 800);
+}
+
+function endRespins(){
+  el('respin-bar').style.display = 'none';
+  G.respins = 0;
+  
+  // Calculate total from held
+  let total = 0;
+  for(let i=0;i<GRID_SIZE;i++){
+    const cell = el('c'+i);
+    if(cell.classList.contains('hold') && cell.dataset.sym){
+      const s = SYMS.find(s => s.id === cell.dataset.sym);
+      if(s) total += s.v;
+    }
+  }
+  
+  // Show bonus
+  const totalWin = total;
+  if(totalWin > 0){
+    el('bonus-amt').textContent = '$' + totalWin.toFixed(2);
+    el('bonus-overlay').classList.add('show');
+  }
+  
+  // Clear holds for next spin
+  for(let i=0;i<GRID_SIZE;i++){
+    el('c'+i).classList.remove('hold');
+  }
+}
+
+function closeBonus(){
+  el('bonus-overlay').classList.remove('show');
+  toast('Good luck next spin! 🍺');
+  refreshUI();
+  save();
+}
+
+function adjBet(d){
+  G.bet = Math.max(1, Math.min(50, G.bet + d));
+  el('bet-disp').textContent = '$' + G.bet.toFixed(2);
+}
+
+function refreshUI(){
+  el('bm').textContent = G.beerMoney.toFixed(2);
+  el('score').textContent = G.score;
+}
+
+function openPayout(){
+  el('payout-modal').style.display = 'flex';
+}
+
+let toastT;
+function toast(msg){
+  const t = el('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+init();
+</script>
+</body>
+</html>

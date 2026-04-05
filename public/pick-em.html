@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🖐️ Trailer Park Pick'em</title>
+<link href="https://fonts.googleapis.com/css2?family=Rye&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0800;--wood:#1a0f05;--wood-l:#2a1a0a;--copper:#B87333;
+  --sun:#FFD700;--cream:#FFF8DC;--fire:#FF3300;--green:#39FF14;--red:#FF4444;
+}
+body{background:var(--bg);font-family:'Oswald',sans-serif;color:var(--cream);min-height:100vh;overflow-x:hidden}
+#bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 50% 100%,rgba(255,80,0,.3) 0%,transparent 50%),linear-gradient(180deg,#0c0800,#1a1000,#2a1500)}
+
+#app{max-width:450px;margin:0 auto;padding:15px;position:relative;z-index:10;display:flex;flex-direction:column;gap:12px}
+.title{font-family:'Rye',cursive;font-size:2rem;color:var(--sun);text-align:center;text-shadow:0 0 20px rgba(255,215,0,.6)}
+.sub{font-size:.55rem;color:var(--copper);text-align:center;letter-spacing:3px;text-transform:uppercase}
+
+#curr-bar{background:linear-gradient(135deg,rgba(30,18,8,.95),rgba(50,30,15,.95));border:2px solid var(--copper);border-radius:12px;padding:12px;display:flex;justify-content:space-between}
+.curr-lbl{font-size:.45rem;color:var(--copper);text-transform:uppercase;letter-spacing:2px}
+.curr-val{font-size:1.1rem;font-weight:700;color:var(--sun)}
+
+#instructions{background:rgba(0,0,0,.4);border:2px solid var(--copper);border-radius:12px;padding:15px;text-align:center}
+.instr-txt{font-size:.95rem;color:var(--cream);line-height:1.6}
+.instr-txt span{color:var(--sun);font-weight:700}
+
+#cards-area{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:10px;background:linear-gradient(180deg,var(--wood),#1a1008);border:3px solid var(--copper);border-radius:14px}
+.card{aspect-ratio:1;background:linear-gradient(135deg,var(--wood-l),var(--wood));border:3px solid var(--copper);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;cursor:pointer;transition:all .15s;position:relative;overflow:hidden}
+.card::before{content:'?';position:absolute;font-family:'Rye',cursive;font-size:2rem;color:var(--copper);opacity:.5}
+.card.revealed::before{display:none}
+.card:hover:not(.revealed):not(.disabled){transform:scale(1.05);border-color:var(--sun)}
+.card.revealed{animation:flip .4s}
+.card.win{border-color:var(--green);box-shadow:0 0 25px var(--green);background:linear-gradient(135deg,rgba(0,100,0,.3),rgba(0,50,0,.3))}
+.card.lose{border-color:var(--red);opacity:.6}
+.card.disabled{cursor:not-allowed;pointer-events:none}
+@keyframes flip{0%{transform:rotateY(0)}50%{transform:rotateY(90deg)}100%{transform:rotateY(0)}}
+
+#reveal-btn{width:100%;padding:16px;background:linear-gradient(180deg,#FF9500,#CC3300);border:3px solid var(--sun);border-radius:30px;color:var(--cream);font-family:'Rye',cursive;font-size:1.2rem;cursor:pointer;box-shadow:0 5px 0 #800;transition:all .1s;margin-top:10px}
+#reveal-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 7px 0 #800}
+#reveal-btn:disabled{opacity:.5;cursor:not-allowed}
+
+#bet-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:5px}
+.bet-btn{width:30px;height:30px;border-radius:6px;background:var(--wood-l);border:2px solid var(--copper);color:var(--sun);font-weight:700;cursor:pointer}
+#bet-disp{background:rgba(0,0,0,.5);border:2px solid var(--copper);border-radius:8px;padding:6px 16px;color:var(--sun);font-weight:700}
+
+#result{text-align:center;min-height:40px;margin-top:5px}
+.result-txt{font-family:'Rye',cursive;font-size:1.4rem;color:var(--sun)}
+
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(28,15,5,.97);border:2px solid var(--copper);border-radius:10px;padding:12px 24px;color:var(--sun);z-index:200;display:none}
+#toast.show{display:block;animation:toast-in .3s}
+@keyframes toast-in{from{transform:translateX(-50%) translateY(20px)}to{transform:translateX(-50%) translateY(0)}}
+
+@media(max-width:350px){.card{font-size:2rem}}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+
+<div id="app">
+  <div>
+    <div class="title">🖐️ Trailer Park Pick'em</div>
+    <div class="sub">Pick 3 · Find the Prize</div>
+  </div>
+
+  <div id="curr-bar" style="display:flex;justify-content:space-between">
+    <div><div class="curr-lbl">💰 Money</div><div class="curr-val" id="bm">$50</div></div>
+    <div><div class="curr-lbl">🏆 Won</div><div class="curr-val" id="won">$0</div></div>
+    <div><div class="curr-lbl">🎯 Picks</div><div class="curr-val" id="picks">0/3</div></div>
+  </div>
+
+  <div id="instructions">
+    <div class="instr-txt">
+      Pick <span>3 cards</span> from below!<br>
+      🐷 Pig = <span>$5</span> · 🍺 Beer = <span>$10</span><br>
+      💰 Money Bag = <span>$25</span> · 🦅 Eagle = <span>$50</span><br>
+      💩 Poop = <span>Nothing!</span> 😱
+    </div>
+  </div>
+
+  <div id="cards-area">
+    <div class="card" onclick="pickCard(0)"></div>
+    <div class="card" onclick="pickCard(1)"></div>
+    <div class="card" onclick="pickCard(2)"></div>
+    <div class="card" onclick="pickCard(3)"></div>
+    <div class="card" onclick="pickCard(4)"></div>
+    <div class="card" onclick="pickCard(5)"></div>
+  </div>
+
+  <div id="bet-row">
+    <button class="bet-btn" onclick="adjBet(-5)">−</button>
+    <div id="bet-disp">$10</div>
+    <button class="bet-btn" onclick="adjBet(5)">+</button>
+  </div>
+
+  <button id="reveal-btn" onclick="revealAll()">🎰 REVEAL ALL! 🎰</button>
+
+  <div id="result"><div class="result-txt" id="result-txt">Pick your cards!</div></div>
+
+  <div style="text-align:center;margin-top:10px">
+    <button style="padding:10px 20px;background:var(--wood-l);border:2px solid var(--copper);border-radius:8px;color:var(--copper);font-size:.8rem;cursor:pointer" onclick="window.location.href='index.html'">🏠 Home</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const PRIZES = [
+  { e:'🐷', v:5, w:25 },
+  { e:'🍺', v:10, w:20 },
+  { e:'💰', v:25, w:12 },
+  { e:'🦅', v:50, w:5 },
+  { e:'💩', v:0, w:30 },
+  { e:'🍗', v:2, w:15 }
+];
+
+const POOL = [];
+PRIZES.forEach(p => { for(let i=0;i<p.w;i++) POOL.push(p); });
+
+const G = { bet:10, picking:0, picked:[], revealed:false, totalWon:0, beerMoney:50 };
+
+const el = id => document.getElementById(id);
+
+function init(){
+  load();
+  shuffleCards();
+  refreshUI();
+}
+
+function load(){
+  const d = JSON.parse(localStorage.getItem('pickem_data') || '{}');
+  G.beerMoney = d.beerMoney || 50;
+  G.totalWon = d.totalWon || 0;
+}
+
+function save(){
+  localStorage.setItem('pickem_data', JSON.stringify({beerMoney:G.beerMoney,totalWon:G.totalWon}));
+}
+
+function shuffleCards(){
+  const cards = el('cards-area').children;
+  const shuffled = [];
+  while(shuffled.length < 6){
+    const r = Math.floor(Math.random() * POOL.length);
+    shuffled.push(POOL[r]);
+  }
+  G.prizes = shuffled;
+}
+
+function refreshUI(){
+  el('bm').textContent = '$' + G.beerMoney;
+  el('won').textContent = '$' + G.totalWon;
+  el('picks').textContent = G.picked.length + '/3';
+  el('bet-disp').textContent = '$' + G.bet;
+}
+
+function adjBet(d){
+  if(G.revealed) return;
+  G.bet = Math.max(5, Math.min(100, G.bet + d));
+  el('bet-disp').textContent = '$' + G.bet;
+}
+
+function pickCard(i){
+  if(G.revealed || G.picked.includes(i)) return;
+  if(G.picked.length >= 3){
+    toast('Already picked 3! Hit Reveal!');
+    return;
+  }
+  
+  const card = el('cards-area').children[i];
+  card.classList.add('revealed');
+  card.textContent = G.prizes[i].e;
+  
+  G.picked.push(i);
+  refreshUI();
+  
+  if(G.picked.length < 3){
+    toast(`Card ${G.picked.length} picked!`);
+  }
+}
+
+function revealAll(){
+  if(G.picked.length === 0){
+    toast('Pick at least one card first!');
+    return;
+  }
+  if(G.revealed) return;
+  
+  G.revealed = true;
+  el('reveal-btn').disabled = true;
+  
+  // Reveal remaining cards
+  const cards = el('cards-area').children;
+  for(let i=0;i<6;i++){
+    if(!G.picked.includes(i)){
+      setTimeout(() => {
+        cards[i].classList.add('revealed');
+        cards[i].textContent = G.prizes[i].e;
+      }, 200 * i);
+    }
+  }
+  
+  // Calculate winnings
+  setTimeout(() => {
+    let roundWin = 0;
+    for(const idx of G.picked){
+      const prize = G.prizes[idx];
+      if(prize.v > 0){
+        const win = prize.v * (G.bet / 10);
+        roundWin += win;
+        cards[idx].classList.add('win');
+      }else{
+        cards[idx].classList.add('lose');
+      }
+    }
+    
+    if(roundWin > 0){
+      G.beerMoney += roundWin;
+      G.totalWon += roundWin;
+      el('result-txt').textContent = `💰 WON $${roundWin.toFixed(2)}!`;
+      toast(`YEEHAW! Won $${roundWin.toFixed(2)}! 🎉`);
+    }else{
+      el('result-txt').textContent = '💸 WASTED!';
+      toast('Dang! Nothing but poopy! 💩');
+    }
+    
+    save();
+    refreshUI();
+    
+    // Reset for next round
+    setTimeout(() => {
+      resetRound();
+    }, 2000);
+  }, 1200);
+}
+
+function resetRound(){
+  G.picked = [];
+  G.revealed = false;
+  shuffleCards();
+  
+  const cards = el('cards-area').children;
+  for(let i=0;i<6;i++){
+    cards[i].className = 'card';
+    cards[i].textContent = '';
+  }
+  
+  el('result-txt').textContent = 'Pick your cards!';
+  el('reveal-btn').disabled = false;
+  refreshUI();
+}
+
+let tt;
+function toast(msg){
+  const t = el('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(tt);
+  tt = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+init();
+</script>
+</body>
+</html>

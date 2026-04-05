@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🪙 Flip the Trailer Trash Coin</title>
+<link href="https://fonts.googleapis.com/css2?family=Rye&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0800;--wood:#1a0f05;--wood-l:#2a1a0a;--copper:#B87333;
+  --sun:#FFD700;--cream:#FFF8DC;--fire:#FF3300;--teal:#20B2AA;
+}
+body{background:var(--bg);font-family:'Oswald',sans-serif;color:var(--cream);min-height:100vh;overflow-x:hidden;user-select:none}
+#bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 30% 100%,rgba(32,178,170,.2) 0%,transparent 40%),radial-gradient(ellipse at 70% 100%,rgba(255,100,0,.3) 0%,transparent 40%),linear-gradient(180deg,#0c0800,#1a1000,#2a1500)}
+
+#app{max-width:450px;margin:0 auto;padding:15px;position:relative;z-index:10;display:flex;flex-direction:column;gap:15px;min-height:100vh;justify-content:center}
+.title{font-family:'Rye',cursive;font-size:2.5rem;color:var(--sun);text-align:center;text-shadow:0 0 30px rgba(255,215,0,.7),3px 3px 0 var(--fire)}
+.sub{font-size:.6rem;color:var(--copper);text-align:center;letter-spacing:4px;text-transform:uppercase}
+
+#game-area{position:relative;height:220px;display:flex;align-items:center;justify-content:center}
+.coin-wrap{position:relative;width:160px;height:160px;perspective:800px}
+.coin{width:160px;height:160px;border-radius:50%;position:relative;transform-style:preserve-3d;transition:transform .6s ease-out}
+.coin.flip{transform:rotateY(1800deg)}
+.coin-face{position:absolute;inset:0;border-radius:50%;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;font-size:4rem;border:6px solid var(--copper);box-shadow:0 0 30px rgba(184,115,51,.4),inset 0 0 20px rgba(0,0,0,.5)}
+.coin-front{background:linear-gradient(135deg,#3a2a1a,#1a0f05)}
+.coin-back{background:linear-gradient(135deg,#1a3050,#0a1525);transform:rotateY(180deg)}
+.coin.fixed .coin-front{border-color:var(--teal);box-shadow:0 0 40px var(--teal)}
+
+#picks{display:flex;justify-content:center;gap:20px;margin-top:10px}
+.pick-opt{background:rgba(0,0,0,.5);border:3px solid var(--copper);border-radius:50%;width:60px;height:60px;display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;transition:all .2s}
+.pick-opt:hover{transform:scale(1.1)}
+.pick-opt.selected{background:var(--copper);border-color:var(--sun);box-shadow:0 0 20px var(--sun)}
+.pick-opt.locked{opacity:.4;pointer-events:none}
+
+#curr-bar{background:linear-gradient(135deg,rgba(30,18,8,.95),rgba(50,30,15,.95));border:2px solid var(--copper);border-radius:14px;padding:14px;display:flex;justify-content:space-between}
+.curr-item{display:flex;flex-direction:column;align-items:center}
+.curr-lbl{font-size:.45rem;color:var(--copper);text-transform:uppercase;letter-spacing:2px}
+.curr-val{font-size:1.2rem;font-weight:700;color:var(--sun)}
+
+#bet-section{background:linear-gradient(180deg,var(--wood),#1a1008);border:3px solid var(--copper);border-radius:16px;padding:15px;text-align:center}
+.bet-label{font-size:.6rem;color:var(--copper);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
+.bet-row{display:flex;align-items:center;justify-content:center;gap:12px}
+.bet-btn{width:32px;height:32px;border-radius:6px;background:var(--wood-l);border:2px solid var(--copper);color:var(--sun);font-weight:700;font-size:1.1rem;cursor:pointer}
+.bet-btn:hover{background:var(--wood)}
+#bet-disp{background:rgba(0,0,0,.6);border:2px solid var(--copper);border-radius:8px;padding:8px 20px;color:var(--sun);font-weight:700;font-size:1.2rem;min-width:80px}
+
+#spin-btn{width:100%;padding:18px;background:linear-gradient(180deg,#FF9500,#CC3300,#880000);border:3px solid var(--sun);border-radius:40px;color:var(--cream);font-family:'Rye',cursive;font-size:1.4rem;cursor:pointer;box-shadow:0 6px 0 #550000,0 0 30px rgba(255,100,0,.4);transition:all .1s}
+#spin-btn:hover:not(:disabled){transform:translateY(-3px);box-shadow:0 9px 0 #550000,0 0 50px rgba(255,100,0,.6)}
+#spin-btn:active:not(:disabled){transform:translateY(3px);box-shadow:0 3px 0 #550000}
+#spin-btn:disabled{opacity:.5;cursor:not-allowed}
+
+#result-area{min-height:60px;background:rgba(0,0,0,.4);border:2px solid var(--copper);border-radius:12px;padding:12px;text-align:center}
+.result-txt{font-family:'Rye',cursive;font-size:1.5rem;color:var(--sun)}
+.result-sub{font-size:.7rem;color:var(--copper);margin-top:5px}
+
+#streak-bar{background:rgba(0,0,0,.5);border-radius:8px;padding:8px;margin-top:10px;display:none}
+#streak-bar.show{display:block}
+.streak-lbl{font-size:.55rem;color:var(--teal);text-transform:uppercase;letter-spacing:2px;text-align:center}
+.streak-num{font-size:1.8rem;font-weight:700;color:var(--teal);text-align:center;font-family:'Rye',cursive}
+
+#win-anim{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Rye',cursive;font-size:4rem;color:var(--sun);text-shadow:0 0 50px var(--sun);z-index:100;display:none;pointer-events:none}
+#win-anim.show{display:block;animation:win-pop 1s}
+@keyframes win-pop{0%{transform:translate(-50%,-50%) scale(0);opacity:0}30%{transform:translate(-50%,-50%) scale(1.3);opacity:1}100%{transform:translate(-50%,-50%) scale(1);opacity:0}}
+
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(28,15,5,.97);border:2px solid var(--copper);border-radius:10px;padding:12px 24px;color:var(--sun);z-index:200;display:none;white-space:pre-line}
+#toast.show{display:block;animation:toast-in .3s}
+@keyframes toast-in{from{transform:translateX(-50%) translateY(20px)}to{transform:translateX(-50%) translateY(0)}}
+
+@media(max-width:400px){.coin{width:130px;height:130px}.coin-face{font-size:3rem;border-width:4px}.pick-opt{width:50px;height:50px;font-size:1.6rem}}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+
+<div id="app">
+  <div>
+    <div class="title">🪙 Flip the Trailer Trash</div>
+    <div class="sub">Heads or Trailer · Double or Nothin</div>
+  </div>
+
+  <div id="curr-bar">
+    <div class="curr-item"><div class="curr-lbl">💰 Beer Money</div><div class="curr-val" id="bm">50.00</div></div>
+    <div class="curr-item"><div class="curr-lbl">📈 Streak</div><div class="curr-val" id="streak">0</div></div>
+    <div class="curr-item"><div class="curr-lbl">🏆 Best</div><div class="curr-val" id="best">$0</div></div>
+  </div>
+
+  <div id="game-area">
+    <div class="coin-wrap">
+      <div class="coin" id="coin">
+        <div class="coin-face coin-front">🐷</div>
+        <div class="coin-face coin-back">🏠</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="picks">
+    <div class="pick-opt selected" id="pick-heads" onclick="pick('heads')">🐷<br><span style="font-size:.5rem">HEADS</span></div>
+    <div class="pick-opt" id="pick-tails" onclick="pick('tails')">🏠<br><span style="font-size:.5rem">TAILS</span></div>
+  </div>
+
+  <div id="bet-section">
+    <div class="bet-label">📌 Your Bet</div>
+    <div class="bet-row">
+      <button class="bet-btn" onclick="adjBet(-5)">−</button>
+      <div id="bet-disp">$5.00</div>
+      <button class="bet-btn" onclick="adjBet(5)">+</button>
+    </div>
+  </div>
+
+  <button id="spin-btn" onclick="flip()">🪙 FLIP! 🪙</button>
+
+  <div id="result-area">
+    <div class="result-txt" id="result-txt">Pick heads or tails!</div>
+    <div class="result-sub" id="result-sub">Guess right, double your money!</div>
+  </div>
+
+  <div id="streak-bar">
+    <div class="streak-lbl">🔥 Hot Streak! 🔥</div>
+    <div class="streak-num" id="streak-num">0</div>
+  </div>
+
+  <div style="display:flex;justify-content:center;gap:8px;margin-top:10px">
+    <button style="padding:10px 20px;background:var(--wood-l);border:2px solid var(--copper);border-radius:8px;color:var(--copper);font-size:.8rem;cursor:pointer" onclick="window.location.href='index.html'">🏠 Home</button>
+  </div>
+</div>
+
+<div id="win-anim"></div>
+<div id="toast"></div>
+
+<script>
+const G = { 
+  bet:5, 
+  picking:'heads', 
+  flipping:false, 
+  beerMoney:50, 
+  streak:0, 
+  bestWin:0,
+  locked:false
+};
+
+const el = id => document.getElementById(id);
+
+function init(){
+  load();
+  refreshUI();
+}
+
+function load(){
+  const d = JSON.parse(localStorage.getItem('flipcoin_data') || '{}');
+  G.beerMoney = d.beerMoney || 50;
+  G.bestWin = d.bestWin || 0;
+}
+
+function save(){
+  localStorage.setItem('flipcoin_data', JSON.stringify({beerMoney:G.beerMoney,bestWin:G.bestWin}));
+}
+
+function pick(side){
+  if(G.locked || G.flipping) return;
+  G.picking = side;
+  el('pick-heads').classList.toggle('selected', side === 'heads');
+  el('pick-tails').classList.toggle('selected', side === 'tails');
+}
+
+function adjBet(d){
+  if(G.flipping) return;
+  G.bet = Math.max(5, Math.min(G.beerMoney, G.bet + d));
+  el('bet-disp').textContent = '$' + G.bet.toFixed(2);
+}
+
+function refreshUI(){
+  el('bm').textContent = G.beerMoney.toFixed(2);
+  el('streak').textContent = G.streak;
+  el('best').textContent = '$' + G.bestWin.toFixed(2);
+  
+  // Update bet display
+  el('bet-disp').textContent = '$' + G.bet.toFixed(2);
+  
+  // Streak bar
+  el('streak-bar').classList.toggle('show', G.streak >= 3);
+  if(G.streak >= 3) el('streak-num').textContent = G.streak;
+}
+
+function flip(){
+  if(G.flipping) return;
+  if(G.beerMoney < G.bet){ toast('Aint got enough cash, trash panda!'); return; }
+  
+  G.flipping = true;
+  G.locked = true;
+  el('spin-btn').disabled = true;
+  
+  // Deduct bet
+  G.beerMoney -= G.bet;
+  refreshUI();
+  
+  // Random result
+  const result = Math.random() < 0.5 ? 'heads' : 'tails';
+  const won = result === G.picking;
+  
+  // Flip animation
+  const coin = el('coin');
+  coin.classList.add('flip');
+  
+  setTimeout(() => {
+    // Update coin face
+    const front = coin.querySelector('.coin-front');
+    const back = coin.querySelector('.coin-back');
+    
+    if(result === 'heads'){
+      front.textContent = '🐷';
+      back.textContent = '🐷';
+    }else{
+      front.textContent = '🏠';
+      back.textContent = '🏠';
+    }
+    
+    setTimeout(() => {
+      if(won){
+        // WIN!
+        const multiplier = getMultiplier();
+        const win = G.bet * multiplier;
+        G.beerMoney += win;
+        G.streak++;
+        
+        if(G.streak >= 3){
+          el('coin').classList.add('fixed');
+        }
+        
+        if(win > G.bestWin) G.bestWin = win;
+        
+        el('result-txt').textContent = `💰 YOU WON $${win.toFixed(2)}!`;
+        el('result-sub').textContent = multiplier > 1 ? `x${multiplier} payout! Streak: ${G.streak}` : 'Winner!';
+        showWinAnim(win);
+        toast(`YEEHAW! Won $${win.toFixed(2)}! 🔥`);
+      }else{
+        // LOSE
+        G.streak = 0;
+        el('coin').classList.remove('fixed');
+        
+        el('result-txt').textContent = '💸 WASTED!';
+        el('result-sub').textContent = 'Better luck next time, hillbilly!';
+        toast('Oops! Dog ate your money! 🐕');
+      }
+      
+      save();
+      refreshUI();
+      
+      setTimeout(() => {
+        coin.classList.remove('flip');
+        G.flipping = false;
+        G.locked = false;
+        el('spin-btn').disabled = false;
+        
+        // Update pick buttons
+        if(G.beerMoney >= G.bet){
+          el('pick-heads').classList.remove('locked');
+          el('pick-tails').classList.remove('locked');
+        }else{
+          el('pick-heads').classList.add('locked');
+          el('pick-tails').classList.add('locked');
+          toast('Out of cash! Get more beer money!');
+        }
+      }, 800);
+    }, 300);
+  }, 800);
+}
+
+function getMultiplier(){
+  // Streak bonuses
+  if(G.streak >= 10) return 10;
+  if(G.streak >= 7) return 5;
+  if(G.streak >= 5) return 3;
+  if(G.streak >= 3) return 2;
+  return 1;
+}
+
+function showWinAnim(amt){
+  const a = el('win-anim');
+  a.textContent = '+$' + amt.toFixed(2);
+  a.classList.add('show');
+  setTimeout(() => a.classList.remove('show'), 1500);
+}
+
+let tt;
+function toast(msg){
+  const t = el('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(tt);
+  tt = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+init();
+</script>
+</body>
+</html>

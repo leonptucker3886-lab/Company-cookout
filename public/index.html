@@ -266,81 +266,55 @@ html,body{min-height:100%;background:var(--bg);font-family:'Oswald',sans-serif;c
   </div>
 
   <div class="game-section">
-    <div class="game-section-lbl">▼ Click to Play ▼</div>
+    <div class="game-section-lbl">▼ Classic Slots ▼</div>
     <div class="game-preview-wrap" onclick="launchGame()">
       <div class="play-overlay">
         <div class="play-btn-big">🎰 PLAY NOW 🎰</div>
         <div class="play-sub">Kick the Pig</div>
       </div>
-
-      <div class="game-mock">
-        <div class="mock-hud">
-          <div class="mock-hud-item">
-            <div class="mock-hud-lbl">💰 Beer Money</div>
-            <div class="mock-hud-val">42.50</div>
-          </div>
-          <div class="mock-hud-item" style="text-align:center">
-            <div style="font-family:'Rye',cursive;font-size:clamp(.65rem,2vw,.82rem);color:var(--sun);letter-spacing:1px">☀️ Sun N Fun ☀️</div>
-            <div style="font-size:.5rem;color:var(--copper);letter-spacing:2px">PIG PIT EDITION</div>
-          </div>
-          <div class="mock-hud-item">
-            <div class="mock-hud-lbl">🔩 Nails</div>
-            <div class="mock-hud-val">137</div>
-          </div>
+      <div class="game-mock" style="padding:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="font-size:.65rem;color:var(--copper)">💰 42.50</div>
+          <div style="font-family:'Rye';color:var(--sun);font-size:.9rem">☀️ Sun N Fun ☀️</div>
+          <div style="font-size:.65rem;color:var(--copper)">🔩 137</div>
         </div>
-
-        <div class="mock-jp">
-          <div class="mock-jp-lbl">🏆 Progressive Jackpot 🏆</div>
-          <div class="mock-jp-val">💰 24.75</div>
-        </div>
-
-        <div class="mock-reels-frame">
-          <div class="mock-pit"></div>
-          <div class="mock-reels">
-            <div class="mock-reel">
-              <div class="mock-center" style="top:calc(33.3% - 0px);height:33.3%"></div>
-              <div class="mock-sym" style="height:33.3%">🍺</div>
-              <div class="mock-sym win" style="height:33.3%">🛻</div>
-              <div class="mock-sym" style="height:33.3%">🚬</div>
-            </div>
-            <div class="mock-reel">
-              <div class="mock-center" style="top:calc(33.3% - 0px);height:33.3%"></div>
-              <div class="mock-sym" style="height:33.3%">🐕</div>
-              <div class="mock-sym win" style="height:33.3%">🛻</div>
-              <div class="mock-sym" style="height:33.3%">🌽</div>
-            </div>
-            <div class="mock-reel">
-              <div class="mock-center" style="top:calc(33.3% - 0px);height:33.3%"></div>
-              <div class="mock-sym" style="height:33.3%">🏕</div>
-              <div class="mock-sym win" style="height:33.3%">🛻</div>
-              <div class="mock-sym" style="height:33.3%">🎣</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="mock-win">🏆 &nbsp;JACKPOT!&nbsp; 💰 24.75 &nbsp;🏆</div>
-
-        <div class="mock-controls">
-          <div class="mock-ctrl-row">
-            <div class="mock-btn-sm">−</div>
-            <div class="mock-bet">💰 1.00</div>
-            <div class="mock-btn-sm">+</div>
-            <div class="mock-btn-sm" style="font-size:.55rem;width:auto;padding:0 7px">MAX</div>
-          </div>
-          <div class="mock-ctrl-row">
-            <span style="font-size:.58rem;color:var(--copper);letter-spacing:2px">SPEED</span>
-            <div class="mock-spd">
-              <div class="mock-spd-btn">Slow</div>
-              <div class="mock-spd-btn on">Normal</div>
-              <div class="mock-spd-btn">Fast</div>
-            </div>
-          </div>
-          <div class="mock-spin">🎰 &nbsp;SPIN&nbsp; 🎰</div>
+        <div style="display:flex;gap:4px;justify-content:center;background:#0d0400;padding:8px;border-radius:8px;border:2px solid var(--copper)">
+          <div style="font-size:1.5rem">🍺</div>
+          <div style="font-size:1.5rem">🛻</div>
+          <div style="font-size:1.5rem">🚬</div>
         </div>
       </div>
     </div>
-    <div style="font-size:.65rem;color:rgba(184,115,51,.4);letter-spacing:2px;text-transform:uppercase">
-      Opens Sun N Fun Slots · Company Members Only
+  </div>
+
+  <div class="game-section">
+    <div class="game-section-lbl">▼ More Games ▼</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:100%">
+      <div class="game-preview-wrap" onclick="window.location.href='hold-and-win.html'" style="padding:15px">
+        <div style="font-size:2.5rem;margin-bottom:5px">🍺</div>
+        <div style="font-family:'Rye';color:var(--sun);font-size:.85rem">Cold One Hold & Win</div>
+        <div style="font-size:.6rem;color:var(--copper)">Hold coins to win!</div>
+      </div>
+      <div class="game-preview-wrap" onclick="window.location.href='cluster-crush.html'" style="padding:15px">
+        <div style="font-size:2.5rem;margin-bottom:5px">🌽</div>
+        <div style="font-family:'Rye';color:var(--sun);font-size:.85rem">Camp Cluster Crush</div>
+        <div style="font-size:.6rem;color:var(--copper)">Match 5+ to win!</div>
+      </div>
+      <div class="game-preview-wrap" onclick="window.location.href='moonshine-megaways.html'" style="padding:15px">
+        <div style="font-size:2.5rem;margin-bottom:5px">🍶</div>
+        <div style="font-family:'Rye';color:var(--sun);font-size:.85rem">Moonshine Megaways</div>
+        <div style="font-size:.6rem;color:var(--copper)">46,656 ways!</div>
+      </div>
+      <div class="game-preview-wrap" onclick="window.location.href='flip-the-coin.html'" style="padding:15px">
+        <div style="font-size:2.5rem;margin-bottom:5px">🪙</div>
+        <div style="font-family:'Rye';color:var(--sun);font-size:.85rem">Flip the Trailer Trash</div>
+        <div style="font-size:.6rem;color:var(--copper)">Heads or tails?</div>
+      </div>
+      <div class="game-preview-wrap" onclick="window.location.href='pick-em.html'" style="padding:15px">
+        <div style="font-size:2.5rem;margin-bottom:5px">🖐️</div>
+        <div style="font-family:'Rye';color:var(--sun);font-size:.85rem">Trailer Park Pick'em</div>
+        <div style="font-size:.6rem;color:var(--copper)">Pick 3 cards!</div>
+      </div>
     </div>
   </div>
 </div>

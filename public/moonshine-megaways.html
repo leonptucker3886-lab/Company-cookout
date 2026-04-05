@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🍶 Moonshine Megaways</title>
+<link href="https://fonts.googleapis.com/css2?family=Rye&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0500;--wood:#1a1008;--wood-l:#3a2510;--copper:#B87333;
+  --sun:#FFD700;--cream:#FFF8DC;--fire:#FF3300;--purple:#9932CC;
+}
+body{background:var(--bg);font-family:'Oswald',sans-serif;color:var(--cream);min-height:100vh;overflow-x:hidden}
+#bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 50% 100%,rgba(150,50,0,.4) 0%,transparent 50%),linear-gradient(180deg,#0a0500,#1a0800)}
+#smoke{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.15;background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><filter id="f"><feTurbulence baseFrequency="0.02"/></filter><rect width="100" height="100" filter="url(%23f)"/></svg>')}
+
+#app{max-width:600px;margin:0 auto;padding:12px;position:relative;z-index:10;display:flex;flex-direction:column;gap:10px}
+.title{font-family:'Rye',cursive;font-size:2.2rem;color:var(--sun);text-align:center;text-shadow:0 0 25px rgba(255,215,0,.6),3px 3px 0 var(--fire)}
+.sub{font-size:.55rem;color:var(--copper);text-align:center;letter-spacing:4px;text-transform:uppercase}
+
+#way-bar{background:linear-gradient(90deg,var(--wood),#2a1a10,var(--wood));border:2px solid var(--copper);border-radius:10px;padding:8px 15px;display:flex;justify-content:space-between;align-items:center}
+.way-lbl{font-size:.55rem;color:var(--copper);letter-spacing:2px;text-transform:uppercase}
+.way-val{font-size:1.3rem;font-weight:700;color:var(--purple);text-shadow:0 0 10px var(--purple)}
+#ways{font-family:'Rye',cursive;font-size:1.4rem;color:var(--sun)}
+
+#reels-wrap{background:linear-gradient(180deg,var(--wood),#1a1008);border:4px solid var(--copper);border-radius:14px;padding:8px;position:relative;overflow:hidden}
+#reels{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.reel{position:relative;height:120px;overflow:hidden;border-radius:6px;background:rgba(0,0,0,.6)}
+.reel-inner{position:absolute;transition:top .25s ease-out}
+.sym{height:40px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;border-bottom:1px solid rgba(92,48,16,.2)}
+.sym:nth-child(odd){background:rgba(0,0,0,.3)}
+.win-sym{background:rgba(255,215,0,.4);animation:pulse .5s}
+@keyframes pulse{0%{background:rgba(255,215,0,.2)}50%{background:rgba(255,215,0,.5)}100%{background:rgba(255,215,0,.2)}}
+
+#curr-bar{background:linear-gradient(135deg,rgba(30,18,8,.95),rgba(60,35,15,.95));border:2px solid var(--copper);border-radius:12px;padding:10px;display:flex;justify-content:space-between}
+.curr-item{display:flex;flex-direction:column;align-items:center}
+.curr-lbl{font-size:.45rem;color:var(--copper);text-transform:uppercase;letter-spacing:2px}
+.curr-val{font-size:1.1rem;font-weight:700;color:var(--sun)}
+
+#controls{display:flex;flex-direction:column;gap:8px}
+.btn-row{display:flex;gap:8px;justify-content:center}
+.btn{background:linear-gradient(180deg,#994400,#662200);border:2px solid var(--sun);border-radius:30px;padding:12px 28px;color:var(--cream);font-family:'Rye',cursive;font-size:1rem;cursor:pointer;box-shadow:0 4px 0 #440000;transition:all .1s}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 0 #440000}
+.btn:active:not(:disabled){transform:translateY(2px);box-shadow:0 2px 0 #440000}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.bet-row{display:flex;align-items:center;justify-content:center;gap:10px}
+.bet-btn{width:28px;height:28px;border-radius:5px;background:var(--wood-l);border:2px solid var(--copper);color:var(--sun);font-weight:700;cursor:pointer}
+#bet-disp{background:rgba(0,0,0,.5);border:2px solid var(--copper);border-radius:8px;padding:5px 14px;color:var(--sun);font-weight:700}
+
+#msg{background:rgba(0,0,0,.5);border:1px solid var(--copper);border-radius:8px;padding:10px;text-align:center;font-size:.8rem;color:var(--cream)}
+
+#bonus{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:100;display:none;align-items:center;justify-content:center;flex-direction:column;gap:20px}
+#bonus.show{display:flex}
+.bonus-title{font-family:'Rye',cursive;font-size:3.5rem;color:var(--purple);text-shadow:0 0 50px var(--purple)}
+.bonus-sub{font-size:1.2rem;color:var(--cream);text-align:center}
+.bonus-btn{padding:15px 60px;background:var(--purple);border:3px solid var(--sun);border-radius:30px;color:#fff;font-family:'Rye',cursive;font-size:1.4rem;cursor:pointer}
+
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(30,15,5,.97);border:2px solid var(--copper);border-radius:10px;padding:12px 24px;color:var(--sun);z-index:200;display:none}
+#toast.show{display:block;animation:toast-in .3s}
+@keyframes toast-in{from{transform:translateX(-50%) translateY(20px)}to{transform:translateX(-50%) translateY(0)}}
+
+@media(max-width:400px){.sym{font-size:1.3rem}.reel{height:100px}.sym{height:33px}}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<div id="smoke"></div>
+
+<div id="app">
+  <div>
+    <div class="title">🍶 Moonshine Megaways</div>
+    <div class="sub">Still Runnin' · Up to 46,656 Ways</div>
+  </div>
+
+  <div id="way-bar">
+    <div><span class="way-lbl">Ways</span> <span class="way-val" id="ways">0</span></div>
+    <div><span class="way-lbl">Bet</span> <span id="bet-disp">$1.00</span></div>
+  </div>
+
+  <div id="reels-wrap">
+    <div id="reels"></div>
+  </div>
+
+  <div id="curr-bar">
+    <div class="curr-item"><div class="curr-lbl">💰 Beer Money</div><div class="curr-val" id="bm">40.00</div></div>
+    <div class="curr-item"><div class="curr-lbl">🏆 Win</div><div class="curr-val" id="win">$0</div></div>
+    <div class="curr-item"><div class="curr-lbl">🔄 Total Ways</div><div class="curr-val" id="total-ways">0</div></div>
+  </div>
+
+  <div id="controls">
+    <div class="btn-row bet-row">
+      <button class="bet-btn" onclick="adjBet(-.5)">−</button>
+      <button class="btn" style="flex:1" id="spin-btn" onclick="spin()">🎰 STILL RUN! 🎰</button>
+      <button class="bet-btn" onclick="adjBet(.5)">+</button>
+    </div>
+  </div>
+
+  <div id="msg">Hit those still drums! 🍶 Catch 3+ moonshine jugs for free runs! 🏃‍♂️💨</div>
+
+  <div style="display:flex;justify-content:center;gap:8px;margin-top:5px">
+    <button class="btn" style="padding:8px 14px;font-size:.7rem" onclick="window.location.href='index.html'">🏠 Home</button>
+  </div>
+</div>
+
+<div id="bonus">
+  <div class="bonus-title">🍶 STILL RUN!</div>
+  <div class="bonus-sub" id="bonus-text">10 Free Spins!</div>
+  <button class="bonus-btn" onclick="closeBonus()">LET'S GO!</button>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const SYMS = [
+  { e:'🥒', v:2, w:30 },   // pickle
+  { e:'🌭', v:3, w:25 },  // hotdog
+  { e:'🍗', v:4, w:20 },  // chicken
+  { e:'🦂', v:5, w:15 },  // scorpion
+  { e:'💰', v:8, w:10 },  // money bag
+  { e:'🍶', v:20, w:5 },  // moonshine (scatter)
+  { e:'🦅', v:50, w:3 }   // bald eagle (wild)
+];
+
+const POOL = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,3,3,3,3,4,4,4,5,5,5,6,6,6];
+
+const G = { bet:1, spinning:false, beerMoney:40, win:0, ways:0, reelHeights:[], freeSpins:0, freeSpinsLeft:0 };
+const REELS = 6;
+const ROWS = 3;
+
+const el = id => document.getElementById(id);
+const rnd = () => POOL[Math.floor(Math.random()*POOL.length)];
+
+function init(){
+  load();
+  initReels();
+  spawnSmoke();
+  refreshUI();
+}
+
+function load(){
+  const d = JSON.parse(localStorage.getItem('moonshine_data') || '{}');
+  G.beerMoney = d.beerMoney || 40;
+  G.freeSpinsLeft = d.freeSpins || 0;
+}
+
+function save(){
+  localStorage.setItem('moonshine_data', JSON.stringify({beerMoney:G.beerMoney,freeSpins:G.freeSpinsLeft}));
+}
+
+function initReels(){
+  const r = el('reels');
+  r.innerHTML = '';
+  G.reelHeights = [];
+  
+  for(let i=0;i<REELS;i++){
+    const h = 3 + Math.floor(Math.random() * 3);
+    G.reelHeights.push(h);
+    
+    const reel = document.createElement('div');
+    reel.className = 'reel';
+    reel.id = 'reel'+i;
+    
+    const inner = document.createElement('div');
+    inner.className = 'reel-inner';
+    inner.id = 'ri'+i;
+    
+    for(let j=0;j<h+2;j++){
+      const sym = document.createElement('div');
+      sym.className = 'sym';
+      sym.textContent = SYMS[rnd()].e;
+      inner.appendChild(sym);
+    }
+    
+    reel.appendChild(inner);
+    r.appendChild(reel);
+  }
+  updateWays();
+}
+
+function updateWays(){
+  let ways = 1;
+  for(const h of G.reelHeights) ways *= h;
+  G.ways = ways;
+  el('ways').textContent = ways;
+  el('total-ways').textContent = ways;
+}
+
+function spawnSmoke(){
+  for(let i=0;i<8;i++){
+    const s = document.createElement('div');
+    s.style.cssText = `position:fixed;left:${Math.random()*100}%;top:${50+Math.random()*50}%;width:${20+Math.random()*30}px;height:${20+Math.random()*30}px;background:rgba(200,200,200,${.05+Math.random()*.1});border-radius:50%;animation:${3+Math.random()*4}s linear infinite;z-index:1`;
+    document.body.appendChild(s);
+  }
+}
+
+function adjBet(d){
+  G.bet = Math.max(.5, Math.min(10, G.bet + d));
+  el('bet-disp').textContent = '$' + G.bet.toFixed(2);
+}
+
+function refreshUI(){
+  el('bm').textContent = G.beerMoney.toFixed(2);
+  el('win').textContent = '$' + G.win.toFixed(2);
+}
+
+function spin(){
+  if(G.spinning) return;
+  if(G.beerMoney < G.bet){ toast('Aint got enough beer money, boy!'); return; }
+  
+  if(G.freeSpinsLeft > 0){
+    G.freeSpinsLeft--;
+    G.freeSpins--;
+    save();
+  }else{
+    G.beerMoney -= G.bet;
+  }
+  
+  G.spinning = true;
+  G.win = 0;
+  el('spin-btn').disabled = true;
+  refreshUI();
+  
+  spinAllReels();
+}
+
+async function spinAllReels(){
+  const promises = [];
+  for(let i=0;i<REELS;i++){
+    promises.push(spinReel(i));
+  }
+  
+  await Promise.all(promises);
+  
+  // Check wins
+  const wins = calcWins();
+  if(wins.total > 0){
+    G.win = wins.total;
+    G.beerMoney += wins.total;
+    el('win').textContent = '$' + wins.total.toFixed(2);
+    showWin(wins);
+    toast(`YEEHAW! $${wins.total.toFixed(2)}! 🤠`);
+  }
+  
+  // Check scatter
+  const scatters = countScatters();
+  if(scatters >= 3){
+    const spins = scatters === 3 ? 10 : scatters === 4 ? 15 : 20;
+    G.freeSpinsLeft = spins;
+    G.freeSpins = spins;
+    save();
+    setTimeout(() => showBonus(spins), 800);
+  }
+  
+  G.spinning = false;
+  el('spin-btn').disabled = false;
+  refreshUI();
+  save();
+}
+
+async function spinReel(i){
+  return new Promise(resolve => {
+    const inner = el('ri'+i);
+    const h = G.reelHeights[i];
+    let sp = 0;
+    
+    const int = setInterval(() => {
+      inner.innerHTML = '';
+      for(let j=0;j<h+2;j++){
+        const s = document.createElement('div');
+        s.className = 'sym';
+        s.textContent = SYMS[rnd()].e;
+        inner.appendChild(s);
+      }
+      sp++;
+      if(sp >= 8 + i*2){
+        clearInterval(int);
+        // Final position
+        const final = [];
+        for(let j=0;j<h+2;j++){
+          final.push(rnd());
+        }
+        inner.innerHTML = '';
+        for(let j=0;j<final.length;j++){
+          const s = document.createElement('div');
+          s.className = 'sym';
+          s.textContent = SYMS[final[j]].e;
+          inner.appendChild(s);
+        }
+        // Position reel to show middle rows
+        const offset = -40;
+        inner.style.top = offset + 'px';
+        resolve();
+      }
+    }, 60 + i*30);
+  });
+}
+
+function countScatters(){
+  let count = 0;
+  for(let i=0;i<REELS;i++){
+    const inner = el('ri'+i);
+    const syms = inner.querySelectorAll('.sym');
+    for(let j=1;j<=ROWS;j++){
+      if(syms[j] && syms[j].textContent === '🍶') count++;
+    }
+  }
+  return count;
+}
+
+function calcWins(){
+  let total = 0;
+  const wins = [];
+  
+  // For each symbol (except scatter)
+  for(let s=0;s<SYMS.length-1;s++){
+    // Count matches per reel
+    let matches = [];
+    for(let r=0;r<REELS;r++){
+      const inner = el('ri'+r);
+      const syms = inner.querySelectorAll('.sym');
+      let count = 0;
+      for(let j=1;j<=ROWS;j++){
+        if(syms[j] && SYMS[rnd()].e === SYMS[s].e) count++;
+      }
+      matches.push(count);
+    }
+    
+    // Count ways
+    let ways = 1;
+    for(const m of matches) ways *= (m > 0 ? m : 1);
+    
+    if(ways > 0){
+      const pay = SYMS[s].v * G.bet * ways;
+      if(pay > 0){
+        total += pay;
+        wins.push({sym:SYMS[s].e, pay, ways});
+      }
+    }
+  }
+  
+  return {total, wins};
+}
+
+function showWin(wins){
+  // Highlight winning symbols
+  for(const w of wins){
+    const es = document.querySelectorAll('.sym');
+    es.forEach(s => {
+      if(s.textContent === w.sym) s.classList.add('win-sym');
+    });
+  }
+}
+
+function showBonus(n){
+  el('bonus-text').textContent = `${n} Free Spins! Still runnin'! 🍶`;
+  el('bonus').classList.add('show');
+}
+
+function closeBonus(){
+  el('bonus').classList.remove('show');
+  toast(`${G.freeSpinsLeft} free spins remain!`);
+  spin();
+}
+
+let tt;
+function toast(msg){
+  const t = el('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(tt);
+  tt = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+init();
+</script>
+</body>
+</html>
