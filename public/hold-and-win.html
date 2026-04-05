@@ -163,11 +163,29 @@ const SYMS = [
 const POOL = [];
 SYMS.forEach(s => { for(let i=0;i<s.w;i++) POOL.push(s); });
 
-const G = { bet:5, spinning:false, held:[], respins:0, beerMoney:50, score:0, user:'Guest' };
+const G = { bet:5, spinning:false, held:[], respins:0, beerMoney:50, score:0, user:'Guest', reserves:100 };
 const GRID_SIZE = 25;
 
 const el = id => document.getElementById(id);
-const rnd = () => POOL[Math.floor(Math.random()*POOL.length)];
+
+// ── HOUSE PROTECTION ──
+function applyHouseEdge(amount){
+  return Math.floor(amount * 0.92); // 8% house edge
+}
+function checkHouseBalance(){
+  if(G.reserves < 50){
+    toast('🏦 House reserves low! Admin needs to add funds!', 4000);
+  }
+}
+function safePayout(amount){
+  const maxPay = G.reserves + 20; // Keep $20 minimum
+  if(amount > maxPay){
+    amount = maxPay;
+    toast('💰 Payout capped by house reserves!', 3000);
+  }
+  G.reserves = Math.max(0, G.reserves - amount);
+  return amount;
+}
 
 function init(){
   load();
@@ -291,9 +309,11 @@ function finalizeSpin(){
   }else{
     // Regular win from coins
     if(coinTotal > 0){
-      G.beerMoney += coinTotal;
-      G.score += coinTotal * 10;
-      toast(`+$${coinTotal.toFixed(2)} from coins! 🪙`);
+      const houseWin = applyHouseEdge(coinTotal);
+      const safeWin = safePayout(houseWin);
+      G.beerMoney += safeWin;
+      G.score += safeWin * 10;
+      toast(`+$${safeWin.toFixed(2)} from coins! 🪙`);
     }
   }
   
@@ -389,9 +409,22 @@ function endRespins(){
 
 function closeBonus(){
   el('bonus-overlay').classList.remove('show');
-  toast('Good luck next spin! 🍺');
+
+  // Apply bonus payout with house protection
+  const bonusAmt = parseFloat(el('bonus-amt').textContent.replace('$', ''));
+  if(bonusAmt > 0){
+    const houseWin = applyHouseEdge(bonusAmt);
+    const safeWin = safePayout(houseWin);
+    G.beerMoney += safeWin;
+    G.score += safeWin * 10;
+    toast(`+$${safeWin.toFixed(2)} bonus payout! 🎉`);
+  }else{
+    toast('Good luck next spin! 🍺');
+  }
+
   refreshUI();
   save();
+  checkHouseBalance();
 }
 
 function adjBet(d){

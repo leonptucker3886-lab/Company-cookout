@@ -121,11 +121,30 @@ const COLORS = ['c1','c2','c3','c4','c5','c6'];
 const SYMS = ['🌽','🍺','🔥','🐕','🏕','🛻'];
 const POOL = [0,0,0,0,0,1,1,1,1,2,2,2,3,3,4,5];
 
-const G = { bet:2, spinning:false, grid:[], beerMoney:50, totalWin:0, cascades:0, combo:1 };
+const G = { bet:2, spinning:false, grid:[], beerMoney:50, totalWin:0, cascades:0, combo:1, reserves:75 };
 const ROWS = 6, COLS = 5, CELL_SZ = 60;
 
 const el = id => document.getElementById(id);
 const rnd = () => Math.floor(Math.random()*POOL.length);
+
+// ── HOUSE PROTECTION ──
+function applyHouseEdge(amount){
+  return Math.floor(amount * 0.88); // 12% house edge
+}
+function checkHouseBalance(){
+  if(G.reserves < 30){
+    toast('🏦 House reserves critically low!', 4000);
+  }
+}
+function safePayout(amount){
+  const maxPay = G.reserves + 15;
+  if(amount > maxPay){
+    amount = maxPay;
+    toast('💰 Payout limited by house reserves!', 3000);
+  }
+  G.reserves = Math.max(0, G.reserves - amount);
+  return amount;
+}
 
 function init(){
   load();
@@ -211,8 +230,10 @@ async function cascade(){
   if(clusters.length === 0){
     // End of cascade
     if(G.totalWin > 0){
-      G.beerMoney += G.totalWin;
-      showWin(G.totalWin);
+      const houseWin = applyHouseEdge(G.totalWin);
+      const safeWin = safePayout(houseWin);
+      G.beerMoney += safeWin;
+      showWin(safeWin);
     }else{
       toast('No matches this spin! 🍺');
     }
@@ -220,6 +241,7 @@ async function cascade(){
     el('spin-btn').disabled = false;
     refreshUI();
     save();
+    checkHouseBalance();
     return;
   }
   

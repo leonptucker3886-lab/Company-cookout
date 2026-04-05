@@ -118,9 +118,28 @@ const PRIZES = [
 const POOL = [];
 PRIZES.forEach(p => { for(let i=0;i<p.w;i++) POOL.push(p); });
 
-const G = { bet:10, picking:0, picked:[], revealed:false, totalWon:0, beerMoney:50 };
+const G = { bet:10, picking:0, picked:[], revealed:false, totalWon:0, beerMoney:50, reserves:45 };
 
 const el = id => document.getElementById(id);
+
+// ── HOUSE PROTECTION ──
+function applyHouseEdge(amount){
+  return Math.floor(amount * 0.87); // 13% house edge
+}
+function checkHouseBalance(){
+  if(G.reserves < 25){
+    toast('🏦 Trailer park broke!', 4000);
+  }
+}
+function safePayout(amount){
+  const maxPay = G.reserves + 10;
+  if(amount > maxPay){
+    amount = maxPay;
+    toast('💰 Card win capped!', 3000);
+  }
+  G.reserves = Math.max(0, G.reserves - amount);
+  return amount;
+}
 
 function init(){
   load();
@@ -216,10 +235,12 @@ function revealAll(){
     }
     
     if(roundWin > 0){
-      G.beerMoney += roundWin;
-      G.totalWon += roundWin;
-      el('result-txt').textContent = `💰 WON $${roundWin.toFixed(2)}!`;
-      toast(`YEEHAW! Won $${roundWin.toFixed(2)}! 🎉`);
+      const houseWin = applyHouseEdge(roundWin);
+      const safeWin = safePayout(houseWin);
+      G.beerMoney += safeWin;
+      G.totalWon += safeWin;
+      el('result-txt').textContent = `💰 WON $${safeWin.toFixed(2)}!`;
+      toast(`YEEHAW! Won $${safeWin.toFixed(2)}! 🎉`);
     }else{
       el('result-txt').textContent = '💸 WASTED!';
       toast('Dang! Nothing but poopy! 💩');
@@ -227,6 +248,7 @@ function revealAll(){
     
     save();
     refreshUI();
+    checkHouseBalance();
     
     // Reset for next round
     setTimeout(() => {

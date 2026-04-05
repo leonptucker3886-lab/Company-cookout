@@ -129,17 +129,37 @@ body{background:var(--bg);font-family:'Oswald',sans-serif;color:var(--cream);min
 <div id="toast"></div>
 
 <script>
-const G = { 
-  bet:5, 
-  picking:'heads', 
-  flipping:false, 
-  beerMoney:50, 
-  streak:0, 
+const G = {
+  bet:5,
+  picking:'heads',
+  flipping:false,
+  beerMoney:50,
+  streak:0,
   bestWin:0,
-  locked:false
+  locked:false,
+  reserves:80
 };
 
 const el = id => document.getElementById(id);
+
+// ── HOUSE PROTECTION ──
+function applyHouseEdge(amount){
+  return Math.floor(amount * 0.85); // 15% house edge (higher for coin flip)
+}
+function checkHouseBalance(){
+  if(G.reserves < 40){
+    toast('🏦 Trailer park reserves low!', 4000);
+  }
+}
+function safePayout(amount){
+  const maxPay = G.reserves + 25;
+  if(amount > maxPay){
+    amount = maxPay;
+    toast('💰 Coin flip win capped!', 3000);
+  }
+  G.reserves = Math.max(0, G.reserves - amount);
+  return amount;
+}
 
 function init(){
   load();
@@ -220,7 +240,9 @@ function flip(){
         // WIN!
         const multiplier = getMultiplier();
         const win = G.bet * multiplier;
-        G.beerMoney += win;
+        const houseWin = applyHouseEdge(win);
+        const safeWin = safePayout(houseWin);
+        G.beerMoney += safeWin;
         G.streak++;
         
         if(G.streak >= 3){
@@ -245,6 +267,7 @@ function flip(){
       
       save();
       refreshUI();
+      checkHouseBalance();
       
       setTimeout(() => {
         coin.classList.remove('flip');

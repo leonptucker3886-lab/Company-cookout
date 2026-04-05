@@ -124,12 +124,31 @@ const SYMS = [
 
 const POOL = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,3,3,3,3,4,4,4,5,5,5,6,6,6];
 
-const G = { bet:1, spinning:false, beerMoney:40, win:0, ways:0, reelHeights:[], freeSpins:0, freeSpinsLeft:0 };
+const G = { bet:1, spinning:false, beerMoney:40, win:0, ways:0, reelHeights:[], freeSpins:0, freeSpinsLeft:0, reserves:60 };
 const REELS = 6;
 const ROWS = 3;
 
 const el = id => document.getElementById(id);
 const rnd = () => POOL[Math.floor(Math.random()*POOL.length)];
+
+// ── HOUSE PROTECTION ──
+function applyHouseEdge(amount){
+  return Math.floor(amount * 0.90); // 10% house edge
+}
+function checkHouseBalance(){
+  if(G.reserves < 40){
+    toast('🏦 Still reserves running dry!', 4000);
+  }
+}
+function safePayout(amount){
+  const maxPay = G.reserves + 20;
+  if(amount > maxPay){
+    amount = maxPay;
+    toast('💰 Moonshine payout capped!', 3000);
+  }
+  G.reserves = Math.max(0, G.reserves - amount);
+  return amount;
+}
 
 function init(){
   load();
@@ -235,11 +254,13 @@ async function spinAllReels(){
   // Check wins
   const wins = calcWins();
   if(wins.total > 0){
-    G.win = wins.total;
-    G.beerMoney += wins.total;
-    el('win').textContent = '$' + wins.total.toFixed(2);
+    const houseWin = applyHouseEdge(wins.total);
+    const safeWin = safePayout(houseWin);
+    G.win = safeWin;
+    G.beerMoney += safeWin;
+    el('win').textContent = '$' + safeWin.toFixed(2);
     showWin(wins);
-    toast(`YEEHAW! $${wins.total.toFixed(2)}! 🤠`);
+    toast(`YEEHAW! $${safeWin.toFixed(2)}! 🤠`);
   }
   
   // Check scatter
@@ -256,6 +277,7 @@ async function spinAllReels(){
   el('spin-btn').disabled = false;
   refreshUI();
   save();
+  checkHouseBalance();
 }
 
 async function spinReel(i){
