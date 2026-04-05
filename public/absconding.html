@@ -11,6 +11,7 @@
   --bg:#0a0a0a;--jail:#2a1810;--road:#1a1a1a;--grass:#0a4a0a;
   --sun:#FFD700;--cream:#FFF8DC;--fire:#FF3300;--blue:#4169E1;
 }
+#bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 50% 95%,rgba(101,67,33,.35) 0%,transparent 50%),linear-gradient(180deg,#2a1a0a,#3a2510,#4a3215,#5a3f1a)}
 body{background:var(--bg);font-family:'Oswald',sans-serif;color:var(--cream);min-height:100vh;overflow:hidden}
 canvas{border:3px solid var(--sun);border-radius:8px;display:block;margin:0 auto;background:var(--bg)}
 .game-container{max-width:600px;margin:20px auto;text-align:center}
@@ -48,6 +49,7 @@ canvas{border:3px solid var(--sun);border-radius:8px;display:block;margin:0 auto
 </style>
 </head>
 <body>
+<div id="bg"></div>
 <div class="game-container">
   <div>
     <div class="title">🏃‍♂️ Absconding</div>
