@@ -383,7 +383,7 @@ input[type=number]{-moz-appearance:textfield}
             <div class="center-hl"></div>
             <div class="reel-inner" id="ri-0">
               <div class="sym">🚬</div>
-              <div class="sym">🌽</div>
+              <div class="sym">🔗</div>
               <div class="sym">🍺</div>
             </div>
           </div>
@@ -400,7 +400,7 @@ input[type=number]{-moz-appearance:textfield}
             <div class="reel-inner" id="ri-2">
               <div class="sym">🏕</div>
               <div class="sym">🍺</div>
-              <div class="sym">🌽</div>
+              <div class="sym">🔗</div>
             </div>
           </div>
         </div>
@@ -570,7 +570,7 @@ input[type=number]{-moz-appearance:textfield}
 
 const SYMS = [
   { id:'cigarette', e:'🚬', name:'Lucky Strike',        w:28, p3:3  },
-  { id:'corn',      e:'🌽', name:'Corn on the Cob',      w:22, p3:5  },
+  { id:'corn',      e:'🔗', name:'Handcuffs',          w:22, p3:5  },
   { id:'beer',      e:'🍺', name:'Cold One',             w:16, p3:8  },
   { id:'dog',       e:'🐕', name:"Ol' Hound Dog",        w:12, p3:12 },
   { id:'fish',      e:'🎣', name:"Fishin' Pole",         w:10, p3:20 },
@@ -828,7 +828,7 @@ function spin(){
         showWinDisplay(res);
       } else {
         const q=['🐷 Oink! Better luck next spin!','🔥 Keep that fire burning!',
-          '🌽 Almost corn-vincing!','🍺 Another round!','🏕 Camp harder, win bigger!',
+          '🔗 Almost convicting!','🍺 Another round!','🏕 Camp harder, win bigger!',
           '⚡ Charge it up and try again!','🚬 Light one and spin again...'];
         setMsg(q[Math.floor(Math.random()*q.length)]);
       }
