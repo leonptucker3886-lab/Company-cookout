@@ -77,7 +77,6 @@ html,body{min-height:100%;background:var(--bg-gradient);font-family:'Inter','SF 
 .enter-btn{padding:20px 40px;background:linear-gradient(135deg,var(--accent),var(--gold));border:2px solid var(--gold);border-radius:12px;color:var(--primary);font-family:'Inter',sans-serif;font-size:clamp(1rem,3vw,1.2rem);font-weight:600;letter-spacing:1px;cursor:pointer;box-shadow:var(--shadow);transition:all .3s cubic-bezier(0.4,0,0.2,1);position:relative;overflow:hidden}
 
 
-
 .enter-btn:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(0,0,0,.4);background:linear-gradient(135deg,var(--gold),var(--accent))}
 .enter-btn:active{transform:translateY(0);box-shadow:var(--shadow)}
 .tagline{font-size:clamp(.7rem,2vw,.85rem);color:var(--accent);letter-spacing:1px;text-align:center;font-weight:500;opacity:.8}
@@ -253,7 +252,11 @@ html,body{min-height:100%;background:var(--bg-gradient);font-family:'Inter','SF 
         <div class="logo-txt-inner">
           Company Cookout
           <span>Gaming</span>
-        </div>
+  </div>
+
+
+
+<div id="toast"></div>
       </div>
     </div>
   </div>
@@ -263,7 +266,7 @@ html,body{min-height:100%;background:var(--bg-gradient);font-family:'Inter','SF 
     <div class="main-sub">Kick the Pig</div>
   </div>
 
-  <button class="enter-btn" onclick="enterSite()">🎰 ENTER CASINO 🎰</button>
+  <button class="enter-btn" onclick="window.location.href='games.html'">🎰 ENTER CASINO 🎰</button>
   <div class="tagline">Premium Gaming Experience · Mobile Optimized</div>
 </div>
 
@@ -271,21 +274,63 @@ html,body{min-height:100%;background:var(--bg-gradient);font-family:'Inter','SF 
 <div class="page" id="p-about">
   <button class="back-btn" onclick="goBack()">← Back</button>
 
-  <div style="text-align:center;padding:2rem 0">
-    <div style="font-size:4rem;margin-bottom:1rem">🎰</div>
-    <div style="font-family:'Inter',sans-serif;font-size:2rem;font-weight:700;color:var(--cream);margin-bottom:0.5rem">Sun N Fun Slots</div>
-    <div style="font-size:1.1rem;color:var(--accent);margin-bottom:2rem">Premium 3-Reel Progressive Slots</div>
-    <button class="enter-btn" onclick="window.location.href='sun-n-fun-slots.html'" style="font-size:1.2rem;padding:1rem 2rem">🎰 PLAY NOW 🎰</button>
+  <!-- ALL GAMES -->
+  <div style="text-align:center;padding:1rem 1rem 2rem">
+    <div style="font-family:'Inter',sans-serif;font-size:clamp(2rem,8vw,3rem);font-weight:700;color:var(--cream);margin-bottom:0.5rem">All Slots</div>
+    <div style="font-size:clamp(0.9rem,4vw,1.1rem);color:var(--accent);">Choose your game and start winning!</div>
   </div>
-</div>
+  <div class="games-grid">
+    <div class="game-preview-wrap" onclick="window.location.href='hold-and-win.html'">
+      <div style="font-size:2.5rem;margin-bottom:8px;text-shadow:0 2px 4px rgba(0,0,0,.3)">🍺</div>
+      <div style="font-family:'Inter',sans-serif;color:var(--cream);font-size:.9rem;font-weight:600;margin-bottom:4px">Hold & Win</div>
+      <div style="font-size:.7rem;color:var(--accent);font-weight:400">Respin Mechanics</div>
+    </div>
+    <div class="game-preview-wrap" onclick="window.location.href='cluster-crush.html'">
+      <div style="font-size:2.5rem;margin-bottom:8px;text-shadow:0 2px 4px rgba(0,0,0,.3)">🌽</div>
+      <div style="font-family:'Inter',sans-serif;color:var(--cream);font-size:.9rem;font-weight:600;margin-bottom:4px">Cluster Crush</div>
+      <div style="font-size:.7rem;color:var(--accent);font-weight:400">Match-3 Cascade</div>
+    </div>
+    <div class="game-preview-wrap" onclick="window.location.href='moonshine-megaways.html'">
+      <div style="font-size:2.5rem;margin-bottom:8px;text-shadow:0 2px 4px rgba(0,0,0,.3)">🍶</div>
+      <div style="font-family:'Inter',sans-serif;color:var(--cream);font-size:.9rem;font-weight:600;margin-bottom:4px">Moonshine Megaways</div>
+      <div style="font-size:.7rem;color:var(--accent);font-weight:400">46,656 Ways</div>
+    </div>
+    <div class="game-preview-wrap" onclick="window.location.href='fight-or-run.html'">
+      <div style="font-size:2.5rem;margin-bottom:8px;text-shadow:0 2px 4px rgba(0,0,0,.3)">⚔️</div>
+      <div style="font-family:'Inter',sans-serif;color:var(--cream);font-size:.9rem;font-weight:600;margin-bottom:4px">Fight or Run</div>
+      <div style="font-size:.7rem;color:var(--accent);font-weight:400">Battle Arena</div>
+    </div>
+    <div class="game-preview-wrap" onclick="window.location.href='pick-em.html'">
+      <div style="font-size:2.5rem;margin-bottom:8px;text-shadow:0 2px 4px rgba(0,0,0,.3)">🖐️</div>
+      <div style="font-family:'Inter',sans-serif;color:var(--cream);font-size:.9rem;font-weight:600;margin-bottom:4px">Trailer Park Pick'em</div>
+      <div style="font-size:.7rem;color:var(--accent);font-weight:400">Pick 3 Cards</div>
+    </div>
+    <div class="game-preview-wrap" onclick="window.location.href='absconding.html'">
+      <div style="font-size:2.5rem;margin-bottom:8px;text-shadow:0 2px 4px rgba(0,0,0,.3)">🏃‍♂️</div>
+      <div style="font-family:'Inter',sans-serif;color:var(--cream);font-size:.9rem;font-weight:600;margin-bottom:4px">Absconding</div>
+      <div style="font-size:.6rem;color:var(--accent);font-weight:400">Jailbreak Escape</div>
+    </div>
+    <div class="game-preview-wrap" onclick="window.location.href='show-me-your-pitties.html'">
+      <div style="font-size:2.5rem;margin-bottom:8px;text-shadow:0 2px 4px rgba(0,0,0,.3)">🐕</div>
+      <div style="font-family:'Inter',sans-serif;color:var(--cream);font-size:.9rem;font-weight:600;margin-bottom:4px">Show Me Your Pitties</div>
+      <div style="font-size:.6rem;color:var(--accent);font-weight:400">Pitbull Showcase</div>
+    </div>
+    <div class="game-preview-wrap" onclick="window.location.href='destinated-drunk.html'">
+      <div style="font-size:2.5rem;margin-bottom:8px;text-shadow:0 2px 4px rgba(0,0,0,.3)">🍺</div>
+      <div style="font-family:'Inter',sans-serif;color:var(--cream);font-size:.9rem;font-weight:600;margin-bottom:4px">Destinated Drunk</div>
+      <div style="font-size:.6rem;color:var(--accent);font-weight:400">Crash Into Trees</div>
+    </div>
+    <div class="game-preview-wrap" onclick="window.location.href='white-jack.html'">
+      <div style="font-size:2.5rem;margin-bottom:8px;text-shadow:0 2px 4px rgba(0,0,0,.3)">🃏</div>
+      <div style="font-family:'Inter',sans-serif;color:var(--cream);font-size:.9rem;font-weight:600;margin-bottom:4px">White Jack</div>
+      <div style="font-size:.6rem;color:var(--accent);font-weight:400">Trailer Blackjack</div>
+    </div>
+    <div class="game-preview-wrap" onclick="window.location.href='shannon-cannon.html'">
+      <div style="font-size:2.5rem;margin-bottom:8px;text-shadow:0 2px 4px rgba(0,0,0,.3)">💥</div>
+      <div style="font-family:'Inter',sans-serif;color:var(--cream);font-size:.9rem;font-weight:600;margin-bottom:4px">Shannon Cannon</div>
+      <div style="font-size:.6rem;color:var(--accent);font-weight:400">Shoot FedEx Trucks</div>
+    </div>
   </div>
-
-
-</div>
-
-
-
-<div id="toast"></div>
 
 <script>
 (function(){

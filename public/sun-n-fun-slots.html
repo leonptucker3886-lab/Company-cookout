@@ -664,6 +664,7 @@ function setupGuest(){
   G.users.push(guest);
   G.cu=guest;
   el('admin-btn').style.display='none';
+  Sound.init();
   buildPaytable();
   refreshUI();
   spawnEmbers();
@@ -711,6 +712,7 @@ function canCollect(){
 }
 function collectDaily(){
   const u=G.cu; if(!u||!canCollect()) return;
+  Sound.collect();
   const now=new Date(), last=u.lastCollect?new Date(u.lastCollect):null;
   const consecutive=last&&(now-last)<172800000; // within 48h = consecutive
   u.streak=consecutive?(u.streak||0)+1:1;
@@ -729,17 +731,20 @@ function collectDaily(){
 // ── BET CONTROLS ──
 function adjBet(d){
   if(G.spinning) return;
+  Sound.buttonClick();
   G.bet=Math.max(.1,r2(G.bet+d));
   el('bet-disp').textContent=G.bet.toFixed(2);
 }
 function betMax(){
   if(G.spinning) return;
+  Sound.buttonClick();
   const u=G.cu; if(!u) return;
   const maxBet=Math.min(5,u.beerMoney);
   G.bet=Math.max(.1,Math.floor(maxBet*10)/10);
   el('bet-disp').textContent=G.bet.toFixed(2);
 }
 function setSpd(s){
+  Sound.buttonClick();
   G.speed=s;
   document.querySelectorAll('.btn-spd').forEach(b=>{
     b.classList.toggle('active',b.dataset.s===s);
@@ -850,6 +855,8 @@ function spin(){
   G.spinning=true;
   el('spin-btn').disabled=true;
   clearWinDisplay();
+  Sound.spinStart();
+  const spinLoopInterval = Sound.spinLoop();
   if(isFree){
     u.freeSpins--;
     setMsg(`🎰 FREE SPIN! (${u.freeSpins} remaining)`);
@@ -871,6 +878,8 @@ function spin(){
   setTimeout(()=>stopSpin(1,grid), dur+300);
   setTimeout(()=>{
     stopSpin(2,grid);
+    clearInterval(spinLoopInterval);
+    Sound.spinStop();
     setTimeout(()=>{
       const res=evalGrid(grid,G.bet);
       const isJP=!isFree&&checkJackpot(grid);
@@ -879,6 +888,7 @@ function spin(){
         u.beerMoney=r2(u.beerMoney+res.total);
         if(res.freeSpinsGiven>0) u.freeSpins=(u.freeSpins||0)+res.freeSpinsGiven;
         showWinDisplay(res);
+        if(res.total >= G.bet * 5) Sound.winBig(); else Sound.winSmall();
       } else {
         const q=['🐷 Oink! Better luck next spin!','🔥 Keep that fire burning!',
           '🌿 Almost convicting!','🍺 Another round!','🏕 Camp harder, win bigger!',
@@ -960,6 +970,7 @@ function triggerJackpot(){
   G.pendingJP=G.jackpot;
   el('jp-win-val').textContent=G.jackpot.toFixed(2);
   el('jp-overlay').classList.add('show');
+  Sound.jackpot();
   launchConfetti();
 }
 function claimJP(){
@@ -968,6 +979,7 @@ function claimJP(){
   G.stats.paid=r2(G.stats.paid+amt);
   G.jackpot=5; G.pendingJP=null;
   el('jp-overlay').classList.remove('show');
+  Sound.jackpotClaim();
   toast(`🏆 JACKPOT CLAIMED!\n+💰 ${amt.toFixed(2)} added to your account!`,5000);
   refreshUI(); save();
 }
@@ -1011,6 +1023,73 @@ function buildPaytable(){
 // ── MODALS ──
 function openM(id){ el(id).classList.add('open'); }
 function closeM(id){ el(id).classList.remove('open'); }
+
+// ── SOUND MANAGER ──
+const Sound = {
+  audioCtx: null,
+  init() {
+    try {
+      this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    } catch(e) {}
+  },
+  playTone(frequency, duration, type='sine', volume=0.3) {
+    if (!this.audioCtx) return;
+    const oscillator = this.audioCtx.createOscillator();
+    const gainNode = this.audioCtx.createGain();
+    oscillator.connect(gainNode);
+    gainNode.connect(this.audioCtx.destination);
+    oscillator.frequency.value = frequency;
+    oscillator.type = type;
+    gainNode.gain.setValueAtTime(volume, this.audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioCtx.currentTime + duration);
+    oscillator.start(this.audioCtx.currentTime);
+    oscillator.stop(this.audioCtx.currentTime + duration);
+  },
+  spinStart() {
+    this.playTone(200, 0.1, 'sawtooth', 0.2);
+    setTimeout(() => this.playTone(250, 0.1, 'sawtooth', 0.2), 100);
+    setTimeout(() => this.playTone(300, 0.1, 'sawtooth', 0.2), 200);
+  },
+  spinLoop() {
+    const interval = setInterval(() => {
+      this.playTone(150 + Math.random() * 100, 0.05, 'sawtooth', 0.1);
+    }, 200);
+    return interval;
+  },
+  spinStop() {
+    this.playTone(400, 0.2, 'square', 0.3);
+    setTimeout(() => this.playTone(500, 0.15, 'square', 0.3), 50);
+  },
+  winSmall() {
+    this.playTone(523, 0.2, 'sine', 0.4); // C
+    setTimeout(() => this.playTone(659, 0.2, 'sine', 0.4), 150); // E
+    setTimeout(() => this.playTone(784, 0.3, 'sine', 0.4), 300); // G
+  },
+  winBig() {
+    for (let i = 0; i < 5; i++) {
+      setTimeout(() => this.playTone(523 + i * 50, 0.2, 'sine', 0.5), i * 100);
+    }
+  },
+  jackpot() {
+    const notes = [523, 659, 784, 1047, 784, 1047, 1319]; // C E G C G C E
+    notes.forEach((freq, i) => {
+      setTimeout(() => this.playTone(freq, 0.4, 'sine', 0.6), i * 200);
+    });
+  },
+  jackpotClaim() {
+    for (let i = 0; i < 10; i++) {
+      setTimeout(() => this.playTone(800 + Math.random() * 200, 0.1, 'square', 0.7), i * 50);
+    }
+  },
+  collect() {
+    this.playTone(440, 0.15, 'sine', 0.5);
+    setTimeout(() => this.playTone(550, 0.15, 'sine', 0.5), 150);
+    setTimeout(() => this.playTone(660, 0.2, 'sine', 0.5), 300);
+  },
+  buttonClick() {
+    this.playTone(300, 0.1, 'square', 0.2);
+  }
+};
 
 // ── ADMIN GATE ──
 function showAdminGate(){
