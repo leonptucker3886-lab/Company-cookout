@@ -1,11 +1,15 @@
+import { Head } from 'next/head'
+
 export default function Home() {
   return (
     <>
-      <style jsx global>{`
-        @keyframes icon-bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
-        .enter-btn:hover { transform: translateY(-2px); box-shadow: 0 0 42px rgba(255,100,0,.55), 0 7px 0 #880000; }
-        .enter-btn:active { transform: translateY(3px); box-shadow: 0 0 14px rgba(255,100,0,.35), 0 2px 0 #880000; }
-      `}</style>
+      <Head>
+        <style>{`
+          @keyframes icon-bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+          button:hover { transform: translateY(-2px); box-shadow: 0 0 42px rgba(255,100,0,.55), 0 7px 0 #880000 !important; }
+          button:active { transform: translateY(3px); box-shadow: 0 0 14px rgba(255,100,0,.35), 0 2px 0 #880000 !important; }
+        `}</style>
+      </Head>
       <div style={{ background: '#0c0400', fontFamily: 'Oswald, sans-serif', color: '#FFF8DC', minHeight: '100vh', overflowX: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
       <div id="landing" style={{ maxWidth: '800px', width: '100%', padding: '20px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <div className="logo-wrap" style={{ textAlign: 'center' }}>
