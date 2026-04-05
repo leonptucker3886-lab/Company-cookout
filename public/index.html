@@ -120,7 +120,8 @@ html,body{min-height:100%;background:var(--bg);font-family:'Oswald',sans-serif;c
 .game-section{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;max-width:680px}
 .game-section-lbl{font-size:.68rem;color:var(--copper);letter-spacing:5px;text-transform:uppercase;opacity:.75}
 .game-preview-wrap{width:100%;cursor:pointer;position:relative;border-radius:18px;overflow:hidden;
-  border:3px solid var(--copper);box-shadow:0 0 40px rgba(255,107,26,.25);
+  box-shadow:0 0 40px rgba(255,107,26,.25);
+  background:linear-gradient(135deg,rgba(26,15,5,.95),rgba(42,25,10,.95));
   transition:all .2s;transform-origin:center}
 .game-preview-wrap:hover{transform:scale(1.025) translateY(-3px);
   box-shadow:0 0 70px rgba(255,107,26,.5),0 12px 30px rgba(0,0,0,.5)}
@@ -209,6 +210,14 @@ html,body{min-height:100%;background:var(--bg);font-family:'Oswald',sans-serif;c
   padding:12px 28px;color:var(--sun);font-size:.88rem;z-index:600;text-align:center;
   box-shadow:0 0 22px rgba(255,107,26,.28);max-width:90%;display:none}
 #toast.show{display:block;animation:toast-in .3s ease}
+/* LOGIN OVERLAY */
+#login-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:1000;display:flex;align-items:center;justify-content:center}
+.login-box{background:linear-gradient(180deg,var(--wood-mid),var(--wood-dark));border:3px solid var(--copper);border-radius:22px;padding:35px 32px;width:90%;max-width:350px;text-align:center}
+.login-title{font-family:'Rye',cursive;font-size:2.2rem;color:var(--sun);text-shadow:0 0 20px rgba(255,215,0,.6);margin-bottom:8px}
+.login-sub{color:var(--copper);font-size:.65rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:22px}
+.guest-btn{background:linear-gradient(135deg,var(--wood-mid),var(--wood-dark));border:2px solid var(--copper);border-radius:12px;padding:14px 24px;color:var(--cream);font-family:'Oswald',sans-serif;font-size:.95rem;cursor:pointer;margin:6px;transition:all .2s}
+.guest-btn:hover{background:var(--wood-light);transform:translateY(-2px)}
+
 @keyframes toast-in{from{transform:translateX(-50%) translateY(14px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
 
 @media(max-width:480px){
@@ -271,7 +280,7 @@ html,body{min-height:100%;background:var(--bg);font-family:'Oswald',sans-serif;c
   <!-- FEATURED GAME -->
   <div class="game-section">
     <div class="game-section-lbl" style="color:var(--sun);font-size:1.2rem;font-weight:700">⭐ FEATURED GAME ⭐</div>
-    <div class="game-preview-wrap" onclick="window.location.href='sun-n-fun-slots.html'" style="border:4px solid var(--sun);box-shadow:0 0 30px rgba(255,215,0,.3)">
+    <div class="game-preview-wrap" onclick="playGame('sun-n-fun-slots.html')" style="border:4px solid var(--sun);box-shadow:0 0 30px rgba(255,215,0,.3)">
       <div class="play-overlay">
         <div class="play-btn-big" style="font-size:1.8rem">🎰 PLAY NOW 🎰</div>
         <div class="play-sub" style="font-size:1.1rem">🐷 Kick that Pig 🐷</div>
@@ -311,47 +320,66 @@ html,body{min-height:100%;background:var(--bg);font-family:'Oswald',sans-serif;c
   <div class="game-section">
     <div class="game-section-lbl">🎮 More Games 🎮</div>
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;width:100%">
-      <div class="game-preview-wrap" onclick="window.location.href='hold-and-win.html'" style="padding:15px">
+      <div class="game-preview-wrap" onclick="playGame('hold-and-win.html')" style="padding:15px">
         <div style="font-size:2.5rem;margin-bottom:5px">🍺</div>
         <div style="font-family:'Rye';color:var(--sun);font-size:.85rem">Cold One Hold & Win</div>
         <div style="font-size:.6rem;color:var(--copper)">Hold coins to win!</div>
       </div>
-      <div class="game-preview-wrap" onclick="window.location.href='cluster-crush.html'" style="padding:15px">
+      <div class="game-preview-wrap" onclick="playGame('cluster-crush.html')" style="padding:15px">
         <div style="font-size:2.5rem;margin-bottom:5px">🌽</div>
         <div style="font-family:'Rye';color:var(--sun);font-size:.85rem">Camp Cluster Crush</div>
         <div style="font-size:.6rem;color:var(--copper)">Match 5+ to win!</div>
       </div>
-      <div class="game-preview-wrap" onclick="window.location.href='moonshine-megaways.html'" style="padding:15px">
+      <div class="game-preview-wrap" onclick="playGame('moonshine-megaways.html')" style="padding:15px">
         <div style="font-size:2.5rem;margin-bottom:5px">🍶</div>
         <div style="font-family:'Rye';color:var(--sun);font-size:.85rem">Moonshine Megaways</div>
         <div style="font-size:.6rem;color:var(--copper)">46,656 ways!</div>
       </div>
-      <div class="game-preview-wrap" onclick="window.location.href='fight-or-run.html'" style="padding:15px">
+      <div class="game-preview-wrap" onclick="playGame('fight-or-run.html')" style="padding:15px">
         <div style="font-size:2.5rem;margin-bottom:5px">⚔️</div>
         <div style="font-family:'Rye';color:var(--sun);font-size:.85rem">Fight or Run</div>
         <div style="font-size:.6rem;color:var(--copper)">Battle arena!</div>
       </div>
-      <div class="game-preview-wrap" onclick="window.location.href='pick-em.html'" style="padding:15px">
+      <div class="game-preview-wrap" onclick="playGame('pick-em.html')" style="padding:15px">
         <div style="font-size:2.5rem;margin-bottom:5px">🖐️</div>
         <div style="font-family:'Rye';color:var(--sun);font-size:.85rem">Trailer Park Pick'em</div>
         <div style="font-size:.6rem;color:var(--copper)">Pick 3 cards!</div>
       </div>
-      <div class="game-preview-wrap" onclick="window.location.href='absconding.html'" style="padding:15px">
+      <div class="game-preview-wrap" onclick="playGame('absconding.html')" style="padding:15px">
         <div style="font-size:2.5rem;margin-bottom:5px">🏃‍♂️</div>
         <div style="font-family:'Rye';color:var(--sun);font-size:.85rem">Absconding</div>
         <div style="font-size:.6rem;color:var(--copper)">Jailbreak escape!</div>
       </div>
-      <div class="game-preview-wrap" onclick="window.location.href='show-me-your-pitties.html'" style="padding:15px">
+      <div class="game-preview-wrap" onclick="playGame('show-me-your-pitties.html')" style="padding:15px">
         <div style="font-size:2.5rem;margin-bottom:5px">🐕</div>
         <div style="font-family:'Rye';color:var(--sun);font-size:.85rem">Show Me Your Pitties</div>
         <div style="font-size:.6rem;color:var(--copper)">Pitbull showcase!</div>
       </div>
-      <div class="game-preview-wrap" onclick="window.location.href='destinated-drunk.html'" style="padding:15px">
+      <div class="game-preview-wrap" onclick="playGame('destinated-drunk.html')" style="padding:15px">
         <div style="font-size:2.5rem;margin-bottom:5px">🍺</div>
         <div style="font-family:'Rye';color:var(--sun);font-size:.85rem">Destinated Drunk</div>
         <div style="font-size:.6rem;color:var(--copper)">Crash into trees!</div>
       </div>
+      <div class="game-preview-wrap" onclick="playGame('white-jack.html')" style="padding:15px">
+        <div style="font-size:2.5rem;margin-bottom:5px">🃏</div>
+        <div style="font-family:'Rye';color:var(--sun);font-size:.85rem">White Jack</div>
+        <div style="font-size:.6rem;color:var(--copper)">Trailer blackjack!</div>
+      </div>
+      <div class="game-preview-wrap" onclick="playGame('shannon-cannon.html')" style="padding:15px">
+        <div style="font-size:2.5rem;margin-bottom:5px">💥</div>
+        <div style="font-family:'Rye';color:var(--sun);font-size:.85rem">Shannon Cannon</div>
+        <div style="font-size:.6rem;color:var(--copper)">Shoot FedEx trucks!</div>
+      </div>
     </div>
+  </div>
+</div>
+
+<div id="login-overlay">
+  <div class="login-box">
+    <div class="login-title">🎰 Casino Access</div>
+    <div class="login-sub">Login Required to Play</div>
+    <button class="guest-btn" onclick="guestLogin()">👤 Login as Guest</button>
+    <div style="font-size:.75rem;color:var(--copper);margin-top:15px">Welcome to the trailer park casino! 🎪</div>
   </div>
 </div>
 
@@ -379,6 +407,32 @@ html,body{min-height:100%;background:var(--bg);font-family:'Oswald',sans-serif;c
   }
 })();
 
+// LOGIN SYSTEM
+let isLoggedIn = localStorage.getItem('casino_logged_in') === 'true';
+
+function showLogin(){
+  document.getElementById('login-overlay').style.display = 'flex';
+}
+
+function hideLogin(){
+  document.getElementById('login-overlay').style.display = 'none';
+}
+
+function guestLogin(){
+  isLoggedIn = true;
+  localStorage.setItem('casino_logged_in', 'true');
+  hideLogin();
+  toast('Welcome to the trailer park casino! 🎪');
+}
+
+function playGame(gameUrl){
+  if(!isLoggedIn){
+    showLogin();
+    return;
+  }
+  window.location.href = gameUrl;
+}
+
 function enterSite(){
   document.getElementById('p-land').classList.remove('active');
   setTimeout(()=>{ document.getElementById('p-about').classList.add('active'); }, 80);
@@ -390,7 +444,7 @@ function goBack(){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function launchGame(){
-  window.location.href='sun-n-fun-slots.html';
+  playGame('sun-n-fun-slots.html');
 }
 
 document.addEventListener('keydown',e=>{
@@ -400,6 +454,11 @@ document.addEventListener('keydown',e=>{
     }
   }
 });
+
+// Check login on page load
+if(!isLoggedIn){
+  showLogin();
+}
 </script>
 </body>
 </html>
