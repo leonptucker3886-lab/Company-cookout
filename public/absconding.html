@@ -31,6 +31,7 @@ canvas{border:3px solid var(--sun);border-radius:8px;display:block;margin:0 auto
 .btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 0 #800}
 .btn:active:not(:disabled){transform:translateY(2px);box-shadow:0 2px 0 #800}
 .btn:disabled{opacity:.5;cursor:not-allowed}
+.touch-btn{font-size:1.5rem;padding:10px;width:40px;height:40px}
 
 #game-over{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:linear-gradient(180deg,var(--jail),#1a0f0a);border:4px solid var(--sun);border-radius:20px;padding:30px;text-align:center;z-index:1000;max-width:400px;width:90%;display:none}
 .game-over-title{font-family:'Rye',cursive;font-size:2.5rem;color:var(--fire);margin-bottom:10px}
@@ -63,6 +64,20 @@ canvas{border:3px solid var(--sun);border-radius:8px;display:block;margin:0 auto
 
   <canvas id="game-canvas" width="600" height="400"></canvas>
 
+  <div id="touch-controls" style="display:none;margin:15px auto;max-width:300px">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:150px;margin:0 auto">
+      <div></div>
+      <button class="btn touch-btn" ontouchstart="keys.ArrowUp=true" ontouchend="keys.ArrowUp=false" onmousedown="keys.ArrowUp=true" onmouseup="keys.ArrowUp=false">⬆️</button>
+      <div></div>
+      <button class="btn touch-btn" ontouchstart="keys.ArrowLeft=true" ontouchend="keys.ArrowLeft=false" onmousedown="keys.ArrowLeft=true" onmouseup="keys.ArrowLeft=false">⬅️</button>
+      <div></div>
+      <button class="btn touch-btn" ontouchstart="keys.ArrowRight=true" ontouchend="keys.ArrowRight=false" onmousedown="keys.ArrowRight=true" onmouseup="keys.ArrowRight=false">➡️</button>
+      <div></div>
+      <button class="btn touch-btn" ontouchstart="keys.ArrowDown=true" ontouchend="keys.ArrowDown=false" onmousedown="keys.ArrowDown=true" onmouseup="keys.ArrowDown=false">⬇️</button>
+      <div></div>
+    </div>
+  </div>
+
   <div id="controls">
     <button class="btn" id="start-btn" onclick="startGame()">🎮 START</button>
     <button class="btn" onclick="window.location.href='games.html'">🏠 Home</button>
@@ -71,7 +86,7 @@ canvas{border:3px solid var(--sun);border-radius:8px;display:block;margin:0 auto
   <div id="instructions">
     <div class="instr-txt">
       <strong>How to Play:</strong><br>
-      🏃‍♂️ Use ARROW KEYS to move your prisoner<br>
+      🏃‍♂️ Use ARROW KEYS or TOUCH BUTTONS to move your prisoner<br>
       🚔 Avoid patrol cars, guards, and barbed wire<br>
       🎯 Reach the top to ESCAPE and score points!<br>
       ❤️ You have 3 lives - don't get caught!<br>
@@ -114,6 +129,7 @@ let player = { x: COLS/2, y: ROWS-2, lives: 3, score: 0 };
 let level = 1;
 let obstacles = [];
 let keys = {};
+let moveCooldown = 0;
 
 const OBSTACLE_TYPES = {
   car: { emoji: '🚔', speed: 1, dangerous: true },
@@ -127,6 +143,7 @@ const OBSTACLE_TYPES = {
 function initGame(){
   player.x = Math.floor(COLS/2);
   player.y = ROWS-2;
+  moveCooldown = 0;
   obstacles = [];
   createObstacles();
 }
@@ -192,11 +209,14 @@ function update(){
     }
   });
 
-  // Move player
-  if(keys.ArrowLeft && player.x > 0) player.x -= 0.2;
-  if(keys.ArrowRight && player.x < COLS-1) player.x += 0.2;
-  if(keys.ArrowUp && player.y > 0) player.y -= 0.2;
-  if(keys.ArrowDown && player.y < ROWS-1) player.y += 0.2;
+  // Move player (grid-based with cooldown)
+  moveCooldown--;
+  if(moveCooldown <= 0){
+    if(keys.ArrowLeft && player.x > 0) { player.x--; moveCooldown = 8; }
+    else if(keys.ArrowRight && player.x < COLS-1) { player.x++; moveCooldown = 8; }
+    else if(keys.ArrowUp && player.y > 0) { player.y--; moveCooldown = 8; }
+    else if(keys.ArrowDown && player.y < ROWS-1) { player.y++; moveCooldown = 8; }
+  }
 
   // Round player position
   const px = Math.round(player.x);
@@ -234,6 +254,7 @@ function hitObstacle(){
   // Reset player position
   player.x = Math.floor(COLS/2);
   player.y = ROWS-2;
+  moveCooldown = 0;
   toast('💥 Got caught! ' + player.lives + ' lives left!');
 }
 
@@ -303,6 +324,7 @@ function draw(){
 function startGame(){
   document.getElementById('game-over').style.display = 'none';
   document.getElementById('win-screen').style.display = 'none';
+  document.getElementById('touch-controls').style.display = 'block';
   initGame();
   gameRunning = true;
   update();
