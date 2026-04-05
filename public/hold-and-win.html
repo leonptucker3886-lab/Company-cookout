@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🍺 Cold One Hold & Win</title>
+<title>🏃‍♂️ Chasin' My Sista</title>
 <link href="https://fonts.googleapis.com/css2?family=Rye&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -22,6 +22,11 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 .flame.l{left:0}.flame.r{right:0}
 .flame::before{content:'';position:absolute;bottom:0;left:15px;width:30px;height:80px;background:radial-gradient(ellipse,rgba(255,140,0,.5),transparent);border-radius:50% 50% 30% 30%;animation:flicker .8s ease-in-out infinite alternate}
 @keyframes flicker{from{transform:scaleY(1)}to{transform:scaleY(.85)}}
+
+.hillbilly{position:fixed;bottom:100px;font-size:2rem;z-index:3;animation:chase 8s linear infinite}
+@keyframes chase{0%{left:-10%;transform:scaleX(1)}50%{left:50%;transform:scaleX(1)}100%{left:110%;transform:scaleX(-1)}}
+.sister{position:fixed;bottom:120px;font-size:1.8rem;z-index:4;animation:run 8s linear infinite;animation-delay:1s}
+@keyframes run{0%{left:-5%;transform:scaleX(1)}50%{left:55%;transform:scaleX(1)}100%{left:115%;transform:scaleX(-1)}}
 
 #app{max-width:480px;margin:0 auto;padding:15px;position:relative;z-index:10;display:flex;flex-direction:column;gap:12px}
 .title{font-family:'Rye',cursive;font-size:2.2rem;color:var(--sun);text-align:center;text-shadow:0 0 20px rgba(255,215,0,.5),2px 2px 0 var(--fire)}
@@ -81,16 +86,18 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 <div id="embers"></div>
 <div class="flame l"></div>
 <div class="flame r"></div>
+<div class="hillbilly">👨‍🌾</div>
+<div class="sister">👩</div>
 
 <div id="app">
   <div>
-    <div class="title">🍺 Cold One Hold & Win</div>
-    <div class="sub">Collect Coins · Hold to Win</div>
+    <div class="title">🏃‍♂️ Chasin' My Sista</div>
+    <div class="sub">Chase Your Sista · Hold to Win</div>
   </div>
 
   <div id="curr-bar">
     <div class="curr-item">
-      <div class="curr-lbl">💰 Beer Money</div>
+      <div class="curr-lbl">💰 Hillbilly Bucks</div>
       <div class="curr-val" id="bm">50.00</div>
     </div>
     <div>
@@ -117,11 +124,11 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
       <button class="bet-btn" onclick="adjBet(1)">+</button>
     </div>
     <div class="btn-row">
-      <button class="btn" id="spin-btn" onclick="spin()">🎰 SPIN 🎰</button>
+      <button class="btn" id="spin-btn" onclick="spin()">🏃‍♂️ CHASE 🏃‍♂️</button>
     </div>
   </div>
 
-  <div id="msg">Spin to land coins! Hold coins to win! 🍺</div>
+    <div id="msg">Spin to chase! Hold to catch your sista! 🏃‍♂️</div>
 
   <div id="nav">
     <button class="nav-btn" onclick="window.location.href='index.html'">🏠 Home</button>
@@ -130,7 +137,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 </div>
 
 <div id="bonus-overlay">
-  <div class="bonus-title">🎉 HOLD & WIN!</div>
+    <div class="bonus-title">🎉 CAUGHT HER!</div>
   <div class="bonus-amt" id="bonus-amt">$0</div>
   <button class="bonus-btn" onclick="closeBonus()">CLAIM!</button>
 </div>
@@ -140,10 +147,10 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
     <div style="font-family:'Rye',cursive;font-size:1.5rem;color:var(--sun);text-align:center;margin-bottom:15px">📋 Payouts</div>
     <div style="color:var(--cream);font-size:.85rem;line-height:2">
       <div>🪙 Coin · $1-5 random</div>
-      <div>⭐ Star · $10</div>
-      <div>💎 Diamond · $25</div>
-      <div>🏆 Jackpot · $500 (rare)</div>
-      <div style="margin-top:10px;color:var(--copper)">Hold coins with ★ to keep them for next spin!</div>
+      <div>⭐ Kiss · $10</div>
+      <div>💎 Hug · $25</div>
+      <div>🏆 Caught! · $500 (rare)</div>
+      <div style="margin-top:10px;color:var(--copper)">Hold catches with ★ to keep for next chase!</div>
     </div>
     <button onclick="document.getElementById('payout-modal').style.display='none'" style="width:100%;margin-top:15px;padding:10px;background:var(--copper);border:none;border-radius:8px;color:var(--wood);font-weight:700">CLOSE</button>
   </div>
@@ -181,7 +188,7 @@ function safePayout(amount){
   const maxPay = G.reserves + 20; // Keep $20 minimum
   if(amount > maxPay){
     amount = maxPay;
-    toast('💰 Payout capped by house reserves!', 3000);
+    toast('💰 Payout capped by hillbilly reserves!', 3000);
   }
   G.reserves = Math.max(0, G.reserves - amount);
   return amount;
@@ -242,7 +249,7 @@ function toggleHold(i){
 function spin(){
   if(G.spinning) return;
   if(G.beerMoney < G.bet){
-    toast('Not enough Beer Money! 🍺'); return;
+    toast('Not enough Hillbilly Bucks! 💰'); return;
   }
   G.spinning = true;
   el('spin-btn').disabled = true;
@@ -313,7 +320,7 @@ function finalizeSpin(){
       const safeWin = safePayout(houseWin);
       G.beerMoney += safeWin;
       G.score += safeWin * 10;
-      toast(`+$${safeWin.toFixed(2)} from coins! 🪙`);
+      toast(`+$${safeWin.toFixed(2)} from catchin'! 🏆`);
     }
   }
   
@@ -327,7 +334,7 @@ function startRespins(initialWin){
   G.respins = 3;
   el('respin-bar').style.display = 'flex';
   el('respin-num').textContent = G.respins;
-  toast('🎉 HOLD & WIN STARTED! 🎉');
+    toast('🎉 CHASIN STARTED! 🎉');
   
   if(initialWin > 0){
     G.beerMoney += initialWin;
@@ -417,9 +424,9 @@ function closeBonus(){
     const safeWin = safePayout(houseWin);
     G.beerMoney += safeWin;
     G.score += safeWin * 10;
-    toast(`+$${safeWin.toFixed(2)} bonus payout! 🎉`);
+    toast(`+$${safeWin.toFixed(2)} catch bonus! 🎉`);
   }else{
-    toast('Good luck next spin! 🍺');
+    toast('Good luck next chase! 🏃‍♂️');
   }
 
   refreshUI();
